@@ -4,4 +4,4 @@ test: *.sml *.mlb lib-local/*.sml lib-local/*.mlb
 push:
 	git add .
 	git commit -m "."
-	git push
+	git push --force
