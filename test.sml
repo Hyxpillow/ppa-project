@@ -14,7 +14,7 @@ fun test_tc (i, n) filename =
     val g = Graph.load_from_snap_file filename
   in
     print
-        ("V:" ^ Int.toString num_vertices g ^ " E:" Int.toString num_edges g ^ "\n")
+        ("V:" ^ Int.toString Graph.num_vertices g ^ " E:" Int.toString Graph.num_edges g ^ "\n")
   end
 
 val num_tests = List.length test_graphs
