@@ -14,10 +14,10 @@ fun test_louvain i filename =
     let
     val g = Graph.load_from_snap_file filename
     val res = Louvain.louvain g
-    val _ = Seq.app (fn cid => print (Int.toString cid ^ "\n")) res
   in
-    print
-        (Louvain.louvain g ^ "V:" ^ Int.toString (Graph.num_vertices g) ^ " E:" ^ Int.toString (Graph.num_edges g) ^ "\n")
+    Seq.app (fn cid => print (Int.toString cid ^ "\n")) res
+    (* print
+        (Louvain.louvain g ^ "V:" ^ Int.toString (Graph.num_vertices g) ^ " E:" ^ Int.toString (Graph.num_edges g) ^ "\n") *)
   end
 val _ =
   List.foldl (fn (filename, i) => (test_louvain i filename; i + 1)) 1
