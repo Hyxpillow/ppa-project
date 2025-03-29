@@ -4,5 +4,5 @@ sig
 end =
 struct
   fun louvain (g: Graph.t) : int Seq.t = 
-    Seq.singleton 4
+    Seq.empty()
 end
