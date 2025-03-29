@@ -4,5 +4,5 @@ sig
 end =
 struct
   fun louvain (g: Graph.t) : int Seq.t = 
-    Seq.tabulate (fn i => i) 5
+    Seq.tabulate (fn i => i) Graph.num_vertices g
 end

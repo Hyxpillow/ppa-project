@@ -10,7 +10,7 @@ struct
         if i >= len then ""
         else
             Int.toString (Seq.nth s i) ^
-            (if i < len - 1 then ", " else "") ^
+            (if i < len - 1 then "," else "") ^
             loop (i + 1)
     in
         print ("[" ^ loop 0 ^ "]\n")
