@@ -8,16 +8,15 @@ val test_graphs =
   , "test-graph/g7.txt"
   ]
 
+structure Louvain = Louvain
 
-fun test_tc (i, n) filename =
-  let
+fun test_louvain i filename = 
+    let
     val g = Graph.load_from_snap_file filename
   in
     print
-        ("V:" ^ Int.toString (Graph.num_vertices g) ^ " E:" ^ Int.toString (Graph.num_edges g) ^ "\n")
+        (Louvain.louvain g ^ "V:" ^ Int.toString (Graph.num_vertices g) ^ " E:" ^ Int.toString (Graph.num_edges g) ^ "\n")
   end
-
-val num_tests = List.length test_graphs
 val _ =
-  List.foldl (fn (test, i) => (test_tc (i, num_tests) test; i + 1)) 1
+  List.foldl (fn (filename, i) => (test_louvain i filename; i + 1)) 1
     test_graphs
