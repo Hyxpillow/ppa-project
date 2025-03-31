@@ -55,11 +55,11 @@ struct
   fun num_vertices (G {off, ...}) =
     Seq.length off
 
-  fun degree (g as G {off, ...}, v:vertex) =
+  fun degree (g as G {n, off}, v:vertex) =
     let
       val lo = Seq.nth off v
       val hi =
-        if v = num_vertices g - 1 then num_edges g else Seq.nth off (v + 1)
+        if v = num_vertices g - 1 then Seq.length n else Seq.nth off (v + 1)
     in
       hi - lo
     end
