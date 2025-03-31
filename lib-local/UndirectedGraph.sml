@@ -4,7 +4,6 @@ sig
   type graph = t
   type vertex = Graph.vertex
 
-
   (* The 4 functions below require O(1) work and span *)
   val degree: graph * vertex -> int
   val neighbors: graph * vertex -> vertex Seq.t
