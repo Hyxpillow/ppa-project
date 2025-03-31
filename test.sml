@@ -13,7 +13,7 @@ structure Myprint = Myprint
 structure UndirectedGraph = UndirectedGraph
 
 fun test_louvain i filename = 
-    let
+  let
     val g = Graph.load_from_snap_file filename
     val ug = UndirectedGraph.load_from_directed_graph g
     val _ = print
