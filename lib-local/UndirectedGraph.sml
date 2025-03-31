@@ -55,7 +55,7 @@ struct
   fun num_vertices (G {off, ...}) =
     Seq.length off
 
-  fun degree (g as G {off, ...}, v) =
+  fun degree (g as G {off, ...}, v:vertex) =
     let
       val lo = Seq.nth off v
       val hi =
@@ -64,6 +64,6 @@ struct
       hi - lo
     end
 
-  fun neighbors (g as G {n, off}, v) =
+  fun neighbors (g as G {n, off}, v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
 end
