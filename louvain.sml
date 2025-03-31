@@ -35,7 +35,7 @@ struct
               val sigma_tot = if comm_new = comm_old 
                 then Real.fromInt(Seq.nth comm_weights comm_new) - k_i
                 else Real.fromInt(Seq.nth comm_weights comm_new)
-              val delta_Q = k_i_in - k_i * sigma_tot / 2.0 / m
+              val delta_Q = k_i_in - k_i * sigma_tot / m
             in
               (comm_new, delta_Q)
             end
