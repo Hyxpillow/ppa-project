@@ -15,6 +15,7 @@ end =
 struct
   datatype graph =
     G of {n: int Seq.t, off: int Seq.t}
+  type graph = t
   
   fun load_from_directed_graph (g : Graph.graph) : graph = 
     let
@@ -48,7 +49,7 @@ struct
     end
 
   fun num_edges (G {n, ...}) =
-    (Seq.length n) / 2
+    (Seq.length n) div 2
 
   fun num_vertices (G {off, ...}) =
     Seq.length off
