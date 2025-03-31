@@ -2,7 +2,7 @@ structure UndirectedGraph :>
 sig
   type t
   type graph = t
-  type vertex = int
+  type vertex = Graph.vertex
 
 
   (* The 4 functions below require O(1) work and span *)
