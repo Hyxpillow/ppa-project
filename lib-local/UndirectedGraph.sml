@@ -32,7 +32,7 @@ struct
       val neighbors = Seq.flatten undirected_edges
     in
       {
-        neighbors = neighbors,
+        n = neighbors,
         offset = offset
       }
     end
