@@ -19,9 +19,19 @@ struct
   fun load_from_directed_graph (g : Graph.graph) : graph = 
     let
       val nv = Graph.num_vertices g
+      fun dedup cmp xs =
+        let
+            fun loop ([], acc) = List.rev acc
+            | loop ([x], acc) = List.rev (x :: acc)
+            | loop (x::y::rest, acc) =
+                if cmp (x, y) = EQUAL then loop (y::rest, acc)
+                else loop (y::rest, x::acc)
+        in
+            Seq.fromList (loop (Seq.toList xs, []))
+        end
 
       val undirected_edges = Seq.tabulate (fn u =>
-        Merge.dedup Int.compare (
+        dedup Int.compare (
           Merge.merge Int.compare
             (Graph.out_neighbors (g, u), Graph.in_neighbors (g, u))
         )
