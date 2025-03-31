@@ -62,18 +62,24 @@ struct
           update_comm_until_stable (0, true)
         else
           let
-            val (comm_new, _) = calculate_max_deltaQ(v)
+            val (comm_new, deltaQ) = calculate_max_deltaQ(v)
             val comm_old = Array.sub (communities, v)
-            val comm_weight_old = Array.sub (comm_weights, comm_old)
-            val comm_weight_new = Array.sub (comm_weights, comm_new)
-            val degree = UGraph.degree (g, v)
-
-            val _ = Array.update (communities, v, comm_new)
-            val _ = Array.update (comm_weights, comm_old, comm_weight_old - degree)
-            val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree)
           in
-            update_comm_until_stable (v + 1, if comm_old = comm_new then stable else false)
+            if deltaQ > 0 andalso comm_old <> comm_new then
+              let
+                val comm_weight_old = Array.sub (comm_weights, comm_old)
+                val comm_weight_new = Array.sub (comm_weights, comm_new)
+                val degree = UGraph.degree (g, v)
+                val _ = Array.update (communities, v, comm_new)
+                val _ = Array.update (comm_weights, comm_old, comm_weight_old - degree)
+                val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree)
+              in
+                update_comm_until_stable (v + 1, false)
+              end
+            else
+              update_comm_until_stable (v + 1, stable)
           end
+
     in
       update_comm_until_stable (0, true)
     end
