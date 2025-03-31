@@ -6,7 +6,7 @@ struct
   structure UGraph = UndirectedGraph
   fun louvain (g: UGraph.t) : int Seq.t = 
     let
-      val m = Real.fromInt UGraph.num_edges g
+      val m = Real.fromInt (UGraph.num_edges g)
       (* W:O(n) S:O(n)  assign a different community to each node *)
       val communities = Seq.tabulate (fn i => i) (UGraph.num_vertices g)
       (* W:O(n) S:O(n)  the initial weight of each community is the degree of each noed *)
@@ -42,7 +42,7 @@ struct
               val k_i_in = Real.fromInt (Seq.nth neighbor_comm_delta_weights comm_new)
               val sigma_tot = if comm_new = comm_old 
                 then Real.fromInt(Seq.nth comm_weights comm_new)
-                else Real.fromInt((Seq.nth comm_weights comm_new) - k_i)
+                else Real.fromInt(Seq.nth comm_weights comm_new) - k_i
               val delta_Q = k_i_in - k_i * sigma_tot / 2.0 / m
             in
               (comm_new, delta_Q)
