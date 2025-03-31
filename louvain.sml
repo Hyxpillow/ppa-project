@@ -43,7 +43,7 @@ struct
                 " sigma_tot:" ^ Real.toString sigma_tot ^
                 " k_i:" ^ Real.toString k_i ^
                 " m:" ^ Real.toString m ^
-                " delta_Q:" ^ Real.toString delta_Q
+                " delta_Q:" ^ Real.toString delta_Q ^ "\n"
               )
             in
               (comm_new, delta_Q)
