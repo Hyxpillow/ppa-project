@@ -17,6 +17,7 @@ struct
   datatype graph =
     G of {n: int Seq.t, off: int Seq.t}
   type t = graph
+  type vertex = int
   
   fun load_from_directed_graph (g : Graph.graph) : graph = 
     let
