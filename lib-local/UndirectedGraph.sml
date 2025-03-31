@@ -15,7 +15,8 @@ end =
 struct
   datatype graph =
     G of {n: int Seq.t, off: int Seq.t}
-  (* type t = graph *)
+  
+  type t = graph  (* Missing type definition *)
   type vertex = Graph.vertex
   
   fun load_from_directed_graph (g : Graph.graph) : graph = 
@@ -29,7 +30,7 @@ struct
                 if cmp (x, y) = EQUAL then loop (y::rest, acc)
                 else loop (y::rest, x::acc)
         in
-            Seq.fromList (loop (Seq.toList xs, []))
+            Seq.fromList (loop (Seq.toList (Mergesort.sort cmp xs), []))
         end
 
       val undirected_edges = Seq.tabulate (fn u =>
@@ -40,12 +41,12 @@ struct
       ) nv
 
       val degrees = Seq.map Seq.length undirected_edges
-      val (offset, _) = Seq.scan op+ 0 degrees
+      val (offsets, _) = Seq.scan op+ 0 degrees
       val neighbors = Seq.flatten undirected_edges
     in
-      {
+      G {  (* Missing G constructor *)
         n = neighbors,
-        off = offset
+        off = offsets
       }
     end
 
@@ -59,11 +60,11 @@ struct
     let
       val lo = Seq.nth off v
       val hi =
-        if v = num_vertices g - 1 then num_edges g else Seq.nth off (v + 1)
+        if v = num_vertices g - 1 then Seq.length (fn (G {n, ...}) => n) g else Seq.nth off (v + 1)
     in
       hi - lo
     end
 
-  fun neighbors (g as G {n, off}, v:vertex) =
+  fun neighbors (g as G {n, off, ...}, v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
 end
