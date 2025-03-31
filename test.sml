@@ -17,11 +17,11 @@ fun test_louvain i filename =
     val g = Graph.load_from_snap_file filename
     val ug = UndirectedGraph.load_from_directed_graph g
     val _ = print
-        ("UV:" ^ (Int.toString (UndirectedGraph.num_vertices ug)) ^ " UE:" (Int.toString (UndirectedGraph.num_edges ug)) ^ "\n")
+        ("UV:" ^ (Int.toString (UndirectedGraph.num_vertices ug)) ^ " UE:" ^ (Int.toString (UndirectedGraph.num_edges ug)) ^ "\n")
     (* val res = Louvain.louvain g *)
   in
     print
-        ("V:" ^ (Int.toString (Graph.num_vertices g)) ^ " E:" (Int.toString (Graph.num_edges g)) ^ "\n")
+        ("V:" ^ (Int.toString (Graph.num_vertices g)) ^ " E:" ^ (Int.toString (Graph.num_edges g)) ^ "\n")
   end
 val _ =
   List.foldl (fn (filename, i) => (test_louvain i filename; i + 1)) 1
