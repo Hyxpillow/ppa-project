@@ -2,12 +2,12 @@ structure Myprint:
 sig
   val print_int_seq: int Seq.t -> unit
   val print_real_seq: real Seq.t -> unit
-  val print_real_array: real array -> unit
+  val print_int_array: int array -> unit
 end =
 struct
-  fun print_real_array (s: real array) =
+  fun print_int_array (s: int array) =
     let
-        val len = Seq.length s
+        val len = Array.length s
         fun loop i =
         if i >= len then ""
         else

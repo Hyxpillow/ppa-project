@@ -55,9 +55,9 @@ struct
 
       (* loop *)
       fun update_comm_until_stable (v, stable:bool) = 
-        if v == (UGraph.num_vertices g) andalso stable then
+        if v = (UGraph.num_vertices g) andalso stable then
           communities (* final result *)
-        else if v == (UGraph.num_vertices g) andalso not stable then
+        else if v = (UGraph.num_vertices g) andalso not stable then
           update_comm_until_stable (0, true)
         else
           let
