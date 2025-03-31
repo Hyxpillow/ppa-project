@@ -46,7 +46,7 @@ struct
     in
       {
         n = neighbors,
-        offset = offset
+        off = offset
       }
     end
 
