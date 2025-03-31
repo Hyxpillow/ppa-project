@@ -65,7 +65,7 @@ struct
             val (comm_new, deltaQ) = calculate_max_deltaQ(v)
             val comm_old = Array.sub (communities, v)
           in
-            if deltaQ > 0 andalso comm_old <> comm_new then
+            if deltaQ > 0.0 andalso comm_old <> comm_new then
               let
                 val comm_weight_old = Array.sub (comm_weights, comm_old)
                 val comm_weight_new = Array.sub (comm_weights, comm_new)
