@@ -1,10 +1,10 @@
 structure Louvain: 
 sig
-  val louvain: UndirectedGraph.t -> int Seq.t
+  val louvain: UndirectedGraph.t -> real Seq.t
 end =
 struct
   structure UGraph = UndirectedGraph
-  fun louvain (g: UGraph.t) : int Seq.t = 
+  fun louvain (g: UGraph.t) : real Seq.t = 
     let
       val m = Real.fromInt (UGraph.num_edges g)
       (* W:O(n) S:O(n)  assign a different community to each node *)
