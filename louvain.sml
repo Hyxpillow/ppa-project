@@ -4,6 +4,7 @@ sig
 end =
 struct
   structure UGraph = UndirectedGraph
+  structure Myprint = Myprint
   fun louvain (g: UGraph.t) : real Seq.t = 
     let
       val m = Real.fromInt (UGraph.num_edges g)
