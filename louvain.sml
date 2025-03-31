@@ -19,7 +19,7 @@ struct
           val comm_old = Seq.nth communities v
           val k_i = Real.fromInt degree
           (* W:O(d) S:O(log(d))  neighbor_comm_delta_weights *)
-          fun calc_k_i_in (comm_new) = 1
+          fun calc_k_i_in (comm_new) = 
             Parallel.reduce op+ 0 (0, degree) (fn (neighbor_i) => 
               if comm_new = Seq.nth communities (UGraph.neighbors (g, neighbor_i))
               then 1
