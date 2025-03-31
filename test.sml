@@ -21,8 +21,9 @@ fun test_louvain i filename =
     val _ = print
         ("V:" ^ (Int.toString (Graph.num_vertices g)) ^ " E:" ^ (Int.toString (Graph.num_edges g)) ^ "\n")
     val res = Louvain.louvain (ug)
+    val _ = Myprint.print_seq res
   in
-    Myprint.print_seq res
+    i + 1
   end
   List.foldl (fn (filename, i) => (test_louvain i filename; i + 1)) 1
     test_graphs
