@@ -15,6 +15,7 @@ struct
       (* W:O(d) S:O(log(d)) *)
       fun calculate_max_deltaQ (v) = 
         let
+          val _ = print ("V: "^ Int.toString v ^ "\n")
           val neighbors = UGraph.neighbors (g, v)
           val degree = UGraph.degree (g, v)
           val comm_old = Array.sub (communities,v)
