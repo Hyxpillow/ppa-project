@@ -4,6 +4,7 @@ sig
   type graph = t
   type vertex = int
 
+
   (* The 4 functions below require O(1) work and span *)
   val degree: graph * vertex -> int
   val neighbors: graph * vertex -> vertex Seq.t
@@ -15,7 +16,7 @@ end =
 struct
   datatype graph =
     G of {n: int Seq.t, off: int Seq.t}
-  type graph = t
+  type t = graph
   
   fun load_from_directed_graph (g : Graph.graph) : graph = 
     let
