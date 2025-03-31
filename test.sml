@@ -10,6 +10,7 @@ val test_graphs =
 
 structure Louvain = Louvain
 structure Myprint = Myprint
+structure UndirectedGraph = UndirectedGraph
 
 fun test_louvain i filename = 
     let
