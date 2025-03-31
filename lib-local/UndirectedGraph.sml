@@ -62,6 +62,6 @@ struct
       hi - lo
     end
 
-  fun neighbors (g as G {n, off} v) =
+  fun neighbors (g as G {n, off}, v) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
 end
