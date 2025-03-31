@@ -1,11 +1,13 @@
 val test_graphs =
-  [ "test-graph/g1.txt"
-  (* , "test-graph/g2.txt"
-  , "test-graph/g3.txt"
-  , "test-graph/g4.txt"
-  , "test-graph/g5.txt"
-  , "test-graph/g6.txt" *)
-  , "test-graph/g7.txt"
+  [ 
+    "test-graph/g6.txt"
+  (* "test-graph/g1.txt" *)
+  (* , "test-graph/g2.txt" *)
+  (* , "test-graph/g3.txt" *)
+  (* , "test-graph/g4.txt" *)
+  (* , "test-graph/g5.txt" *)
+  (* , "test-graph/g6.txt" *)
+  (* , "test-graph/g7.txt" *)
   ]
 
 structure Louvain = Louvain
