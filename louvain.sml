@@ -47,6 +47,6 @@ struct
       (* fun update_comm_until_stable () = 1 *)
       val (comm_new, delta_Q) = calculate_max_deltaQ(0)
     in
-      Seq.singleton (comm_new)
+      Seq.append ((Seq.singleton (Real.fromInt comm_new)), (Seq.singleton (delta_Q)))
     end
 end
