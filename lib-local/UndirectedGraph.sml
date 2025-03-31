@@ -60,7 +60,7 @@ struct
     let
       val lo = Seq.nth off v
       val hi =
-        if v = num_vertices g - 1 then Seq.length (fn (G {n, ...}) => n) g else Seq.nth off (v + 1)
+        if v = num_vertices g - 1 then num_edges g else Seq.nth off (v + 1)
     in
       hi - lo
     end
