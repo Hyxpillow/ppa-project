@@ -15,8 +15,7 @@ end =
 struct
   datatype graph =
     G of {n: int Seq.t, off: int Seq.t}
-  
-  type t = graph  (* Missing type definition *)
+  type t = graph 
   type vertex = Graph.vertex
   
   fun load_from_directed_graph (g : Graph.graph) : graph = 
@@ -44,7 +43,7 @@ struct
       val (offsets, _) = Seq.scan op+ 0 degrees
       val neighbors = Seq.flatten undirected_edges
     in
-      G {  (* Missing G constructor *)
+      G {
         n = neighbors,
         off = offsets
       }
