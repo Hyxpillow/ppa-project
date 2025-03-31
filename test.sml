@@ -24,4 +24,5 @@ fun test_louvain i filename =
     print
         ("V:" ^ (Int.toString (Graph.num_vertices g)) ^ " E:" ^ (Int.toString (Graph.num_edges g)) ^ "\n")
   end
-List.foldl (fn (filename, i) => (test_louvain i filename; i + 1)) 1 test_graphs
+
+val _ = List.foldl (fn (filename, i) => (test_louvain i filename; i + 1)) 1 test_graphs
