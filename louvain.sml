@@ -36,6 +36,15 @@ struct
                 then Real.fromInt(Seq.nth comm_weights comm_new) - k_i
                 else Real.fromInt(Seq.nth comm_weights comm_new)
               val delta_Q = k_i_in - k_i * sigma_tot / m
+              val _ = print (
+                "nb_i:" ^ Int.toString neighbor_i ^ 
+                " comm_new:" ^ Int.toString comm_new ^
+                " k_i_in:" ^ Real.toString k_i_in ^
+                " sigma_tot:" ^ Real.toString sigma_tot ^
+                " k_i:" ^ Real.toString k_i ^
+                " m:" ^ Real.toString m ^
+                " delta_Q:" ^ Real.toString delta_Q ^
+              )
             in
               (comm_new, delta_Q)
             end
