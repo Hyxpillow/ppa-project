@@ -2,10 +2,10 @@ structure Myprint:
 sig
   val print_int_seq: int Seq.t -> unit
   val print_real_seq: real Seq.t -> unit
-  val print_real_array: real Array.t -> unit
+  val print_real_array: real array -> unit
 end =
 struct
-  fun print_real_array (s: ireal Array.t) =
+  fun print_real_array (s: real array) =
     let
         val len = Seq.length s
         fun loop i =

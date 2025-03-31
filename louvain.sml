@@ -1,11 +1,11 @@
 structure Louvain: 
 sig
-  val louvain: UndirectedGraph.t -> int Array.t
+  val louvain: UndirectedGraph.t -> int array
 end =
 struct
   structure UGraph = UndirectedGraph
   structure Myprint = Myprint
-  fun louvain (g: UGraph.t) : int Array.t = 
+  fun louvain (g: UGraph.t) : int array = 
     let
       val m = Real.fromInt (UGraph.num_edges g)
       (* W:O(n) S:O(n)  assign a different community to each node *)
