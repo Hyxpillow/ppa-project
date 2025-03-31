@@ -11,6 +11,7 @@ struct
       val communities = Seq.tabulate (fn i => i) (UGraph.num_vertices g)
       (* W:O(n) S:O(n)  the initial weight of each community is the degree of each noed *)
       val comm_weights = Seq.tabulate (fn i => (UGraph.degree (g, i))) (UGraph.num_vertices g)
+      val _ = Myprint.print_int_seq comm_weights
       (* W:O(d) S:O(log(d))  *)
       fun calculate_max_deltaQ (v) = 
         let
