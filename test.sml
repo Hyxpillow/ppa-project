@@ -17,7 +17,7 @@ fun test_louvain i filename =
     val g = Graph.load_from_snap_file filename
     val ug = UndirectedGraph.load_from_directed_graph g
     val res = Louvain.louvain (ug)
-    val _ = Myprint.print_real_array res
+    val _ = Myprint.print_int_array res
     val _ = print ("UV:" ^ (Int.toString (UndirectedGraph.num_vertices ug)) ^ " UE:" ^ (Int.toString (UndirectedGraph.num_edges ug)) ^ "\n")
     (* val _ = print ("V:" ^ (Int.toString (Graph.num_vertices g)) ^ " E:" ^ (Int.toString (Graph.num_edges g)) ^ "\n") *)
   in
