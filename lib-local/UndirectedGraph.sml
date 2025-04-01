@@ -35,7 +35,11 @@ struct
       val undirected_edges = Seq.tabulate (fn u =>
         dedup Int.compare (
           Merge.merge Int.compare
-            (Graph.out_neighbors (g, u), Graph.in_neighbors (g, u))
+            (
+            (* eliminate self-loop *)
+            Seq.filter (fn v => v <> u) (Graph.out_neighbors (g, u)), 
+            Seq.filter (fn v => v <> u) (Graph.in_neighbors (g, u))
+          )
         )
       ) nv
 
