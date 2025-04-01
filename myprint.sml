@@ -3,7 +3,7 @@ sig
   val print_int_seq: int Seq.t -> unit
   val print_real_seq: real Seq.t -> unit
   val print_int_array: int array -> unit
-  val f_print_int_array: (int array, string) -> unit
+  val f_print_int_array: int array * string -> unit
 end =
 struct
   fun print_int_array (s: int array) =
