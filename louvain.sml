@@ -79,7 +79,7 @@ struct
                 val (comm_new, delta_Q, neighbor) = Seq.nth expected_comm v
                 val comm_old = Array.sub (communities, v)
                 val updated = 
-                  if Array.sub (changed_bit, neighbor) then true
+                  if Array.sub (changed_bit, v) then true
                   else if delta_Q > 0.0 andalso comm_old <> comm_new then update_comm (v, comm_old, comm_new, neighbor)
                   else false
               in
