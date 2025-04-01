@@ -25,13 +25,14 @@ struct
               if comm_new = (Array.sub (communities, (Seq.nth neighbors neighbor_i))) then 1
               else 0
             )
-          fun g ((comm1, delta1), (comm2, delta2)) = 
-            if delta1 > delta2 then (comm1, delta1) else (comm2, delta2)
-
-          val z = (0, 0.0)
+          
+          fun g ((comm1, delta1, neighbor1), (comm2, delta2, neighbor2)) = 
+            if delta1 > delta2 then (comm1, delta1, neighbor1) else (comm2, delta2, neighbor2)
+          val z = (0, 0.0, 0)
           fun f (neighbor_i) = 
             let
-              val comm_new = Array.sub (communities, (Seq.nth neighbors neighbor_i))
+              val neighbor = Seq.nth neighbors neighbor_i
+              val comm_new = Array.sub (communities, neighbor)
               val k_i_in = Real.fromInt (calc_k_i_in comm_new)
               val sigma_tot = if comm_new = comm_old 
                 then Real.fromInt(Array.sub (comm_weights, comm_new)) - k_i
@@ -47,42 +48,56 @@ struct
                 " delta_Q:" ^ Real.toString delta_Q ^ "\n"
               ) *)
             in
-              (comm_new, delta_Q)
+              (comm_new, delta_Q, neighbor)
             end
           (* val _ = print ("V: "^ Int.toString v ^ "\n") *)
         in
           (* W:O(d) S:O(log(d))  return {argmax_comm(delta_Q), max(delta_Q)}*)
           Parallel.reduce g z (0, degree) f
         end
-
-      (* loop *)
-      fun update_comm_until_stable (v, stable:bool) = 
-        if v = (UGraph.num_vertices g) andalso stable then
-          communities (* final result *)
-        else if v = (UGraph.num_vertices g) andalso not stable then
-          update_comm_until_stable (0, true)
-        else
-          let
-            val (comm_new, deltaQ) = calculate_max_deltaQ(v)
-            val comm_old = Array.sub (communities, v)
-          in
-            if deltaQ > 0.0 andalso comm_old <> comm_new then
-              let
-                val comm_weight_old = Array.sub (comm_weights, comm_old)
-                val comm_weight_new = Array.sub (comm_weights, comm_new)
-                val degree = UGraph.degree (g, v)
-                val _ = Array.update (communities, v, comm_new)
-                val _ = Array.update (comm_weights, comm_old, comm_weight_old - degree)
-                val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree)
-                (* val _ = print ("Move from " ^ Int.toString comm_old ^ " to "^ Int.toString comm_new ^ "\n") *)
-              in
-                update_comm_until_stable (v + 1, false)
-              end
+    
+      fun update_comm_in_parallel () = 
+        let
+          val expected_comm = Parallel.tabulate (0, (UGraph.num_vertices g)) (fn (i) => calculate_max_deltaQ i)
+          val changed_bit = Array.tabulate ((UGraph.num_vertices g), (fn (i) => false)) 
+          fun update_comm (v, comm_old, comm_new, target_neighbor) = 
+            let
+              val comm_weight_old = Array.sub (comm_weights, comm_old)
+              val comm_weight_new = Array.sub (comm_weights, comm_new)
+              val degree = UGraph.degree (g, v)
+              val _ = Array.update (communities, v, comm_new)
+              val _ = Array.update (comm_weights, comm_old, comm_weight_old - degree)
+              val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree)
+              val _ = Array.update (changed_bit, target_neighbor, true)
+            in
+              true (* updated in this round *)
+            end
+          fun try_update_comm (v, stable : bool) = 
+            if v >= (UGraph.num_vertices g) then stable
             else
-              update_comm_until_stable (v + 1, stable)
-          end
-
+              let 
+                val (comm_new, delta_Q, neighbor) = Seq.nth expected_comm v
+                val comm_old = Array.sub (communities, v)
+                val updated = 
+                  if Array.sub (changed_bit, neighbor) then true
+                  else if deltaQ > 0.0 andalso comm_old <> comm_new then update_comm (v, comm_old, comm_new, neighbor)
+                  else false
+              in
+                try_update_comm (v + 1, if updated then false else stable)
+              end
+            
+          val stable = try_update_comm (0, true)
+        in
+          stable
+        end
+      
+      fun update_comm_until_stable (round) = 
+        if update_comm_in_parallel 
+          then round 
+          else update_comm_until_stable (round + 1)
+    
+      val _ = update_comm_until_stable 0
     in
-      update_comm_until_stable (0, true)
+      communities
     end
 end

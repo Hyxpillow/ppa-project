@@ -9,6 +9,6 @@ push:
 send_graph:
 	scp meGraph.txt yh5047@access.cims.nyu.edu:~/ppa/ppa-project/
 
-send_communities:
+recv_comm:
 	scp yh5047@access.cims.nyu.edu:~/ppa/ppa-project/comm.txt .
 
