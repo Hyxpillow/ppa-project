@@ -26,7 +26,13 @@ struct
               else 0
             )
           fun g ((comm1, delta1), (comm2, delta2)) = 
-            if delta1 > delta2 then (comm1, delta1) else (comm2, delta2)
+            if delta1 > delta2 then 
+              (comm1, delta1)
+            else if delta1 = delta2 then 
+              if comm1 = comm_old then comm1
+              else comm2
+            else
+              (comm2, delta2)
           val z = (0, 0.0)
           fun f (neighbor_i) = 
             let
