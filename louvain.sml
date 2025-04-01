@@ -26,8 +26,8 @@ struct
               else 0
             )
           
-          fun g ((comm1, delta1, neighbor1), (comm2, delta2, neighbor2)) = 
-            if delta1 > delta2 then (comm1, delta1, neighbor1) else (comm2, delta2, neighbor2)
+          fun g ((comm1, delta1), (comm2, delta2)) = 
+            if delta1 > delta2 then (comm1, delta1) else (comm2, delta2)
           val z = (0, 0.0, 0)
           fun f (neighbor_i) = 
             let
@@ -48,7 +48,7 @@ struct
                 " delta_Q:" ^ Real.toString delta_Q ^ "\n"
               ) *)
             in
-              (comm_new, delta_Q, neighbor)
+              (comm_new, delta_Q)
             end
           (* val _ = print ("V: "^ Int.toString v ^ "\n") *)
         in
@@ -58,37 +58,48 @@ struct
     
       fun update_comm_in_parallel () = 
         let
-          val expected_comm = Parallel.tabulate (0, (UGraph.num_vertices g)) (fn (i) => calculate_max_deltaQ i)
-          val changed_bit = Array.tabulate ((UGraph.num_vertices g), (fn (i) => false)) 
-          fun update_comm (v, comm_old, comm_new, target_neighbor) = 
+          val stable = ref true
+          fun update_comm (v, comm_old, comm_new) = 
             let
-              val comm_weight_old = Array.sub (comm_weights, comm_old)
-              val comm_weight_new = Array.sub (comm_weights, comm_new)
+              (* Concurrent Safe *)
               val degree = UGraph.degree (g, v)
               val _ = Array.update (communities, v, comm_new)
-              val _ = Array.update (comm_weights, comm_old, comm_weight_old - degree)
-              val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree)
-              val _ = Array.update (changed_bit, target_neighbor, true)
+              
+              fun atomic_update_comm (comm, add_or_sub, delta_degree) = 
+                let
+                  val old_weight = Array.sub (comm_weights, comm)
+                  val new_weight = add_or_sub (old_weight, delta_degree)
+                  val result = Concurrency.casArray (comm_weights, comm, old_weight, new_weight)
+                in
+                  if result = old_weight
+                    then (!stable := false) (* CAS succeeded *)
+                    else atomic_update_comm(comm, add_or_sub, delta_degree) (* CAS failed, retry with the new current value *)
+                end
+
+              (* Concurrent Unsafe *)
+              (* val comm_weight_new = Array.sub (comm_weights, comm_new)
+                 val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree) 
+              *)
+              (* Concurrent Safe *)
+              val _ = atomic_update_comm (comm_old, op-, degree)
+              val _ = atomic_update_comm (comm_new, op+, degree)
             in
-              true (* updated in this round *)
+              ()
             end
-          fun try_update_comm (v, stable:bool) : bool = 
-            if v >= (UGraph.num_vertices g) then stable
-            else
-              let 
-                val (comm_new, delta_Q, neighbor) = Seq.nth expected_comm v
+          val expected_comm_seq = Parallel.tabulate (0, (UGraph.num_vertices g)) (fn (v) => calculate_max_deltaQ v)
+          val _ = Parallel.parfor (0, (UGraph.num_vertices g)) (
+            fn (v) => 
+              let
+                val (comm_new, delta_Q) = Seq.nth expected_comm_seq v
                 val comm_old = Array.sub (communities, v)
-                val updated = 
-                  if Array.sub (changed_bit, v) then true
-                  else if delta_Q > 0.0 andalso comm_old <> comm_new then update_comm (v, comm_old, comm_new, neighbor)
-                  else false
               in
-                try_update_comm (v + 1, if updated then false else stable)
+                if delta_Q > 0.0 andalso comm_old <> comm_new 
+                  then update_comm (v, comm_old, comm_new)
+                  else ()
               end
-            
-          val stable = try_update_comm (0, true)
+            )
         in
-          stable
+          !stable
         end
       
       fun update_comm_until_stable (round) = 
@@ -96,7 +107,7 @@ struct
           then round 
           else update_comm_until_stable (round + 1)
     
-      val _ = update_comm_until_stable 0
+      val round = update_comm_until_stable 0
     in
       communities
     end
