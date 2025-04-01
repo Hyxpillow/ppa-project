@@ -72,7 +72,7 @@ struct
             in
               true (* updated in this round *)
             end
-          fun try_update_comm (v, stable : bool) = 
+          fun try_update_comm (v, stable:bool) = 
             if v >= (UGraph.num_vertices g) then stable
             else
               let 
@@ -80,7 +80,7 @@ struct
                 val comm_old = Array.sub (communities, v)
                 val updated = 
                   if Array.sub (changed_bit, neighbor) then true
-                  else if deltaQ > 0.0 andalso comm_old <> comm_new then update_comm (v, comm_old, comm_new, neighbor)
+                  else if delta_Q > 0.0 andalso comm_old <> comm_new then update_comm (v, comm_old, comm_new, neighbor)
                   else false
               in
                 try_update_comm (v + 1, if updated then false else stable)
