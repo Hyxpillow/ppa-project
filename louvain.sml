@@ -50,7 +50,6 @@ struct
             in
               (comm_new, delta_Q)
             end
-          (* val _ = print ("V: "^ Int.toString v ^ "\n") *)
         in
           (* W:O(d) S:O(log(d))  return {argmax_comm(delta_Q), max(delta_Q)}*)
           Parallel.reduce g z (0, degree) f
@@ -64,6 +63,7 @@ struct
               (* Concurrent Safe *)
               val degree = UGraph.degree (g, v)
               val _ = Array.update (communities, v, comm_new)
+              val _ = print ((Int.toString v) ^ " Move from " ^ (Int.toString comm_old) ^ " to " ^ (Int.toString comm_new) ^ "\n")
               
               fun atomic_update_comm (comm, add_or_sub, delta_degree) = 
                 let
@@ -103,9 +103,13 @@ struct
         end
       
       fun update_comm_until_stable (round) = 
+        let
+          val _ = print ("ROUND" ^ (Int.toString round) ^ "\n" )
+        in
         if update_comm_in_parallel ()
           then round 
           else update_comm_until_stable (round + 1)
+        end
     
       val round = update_comm_until_stable 0
     in
