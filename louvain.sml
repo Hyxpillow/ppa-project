@@ -15,7 +15,6 @@ struct
       (* W:O(d) S:O(log(d)) *)
       fun calculate_max_deltaQ (v) = 
         let
-          val _ = print ("V: "^ Int.toString v ^ "\n")
           val neighbors = UGraph.neighbors (g, v)
           val degree = UGraph.degree (g, v)
           val comm_old = Array.sub (communities,v)
@@ -49,6 +48,7 @@ struct
             in
               (comm_new, delta_Q)
             end
+          val _ = print ("V: "^ Int.toString v ^ "\n")
         in
           (* W:O(d) S:O(log(d))  return {argmax_comm(delta_Q), max(delta_Q)}*)
           Parallel.reduce g z (0, degree) f
@@ -73,6 +73,7 @@ struct
                 val _ = Array.update (communities, v, comm_new)
                 val _ = Array.update (comm_weights, comm_old, comm_weight_old - degree)
                 val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree)
+                val _ = print ("Move from " ^ Int.toString comm_old ^ " to "^ Int.toString comm_new ^ "\n")
               in
                 update_comm_until_stable (v + 1, false)
               end
