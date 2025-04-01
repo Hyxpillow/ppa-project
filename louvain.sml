@@ -9,7 +9,9 @@ struct
     let
       val m = Real.fromInt (UGraph.num_edges g)
       (* W:O(n) S:O(n)  assign a different community to each node *)
-      val communities = Array.tabulate ((UGraph.num_vertices g), (fn i => i))
+      val comm = Array.tabulate ((UGraph.num_vertices g), (fn i => i))
+      (* W:O(n) S:O(n)  to avoid comm switching back and forth when parallel algo running *)
+      val comm_history = Array.tabulate ((UGraph.num_vertices g), (fn i => i))
       (* W:O(n) S:O(n)  the initial weight of each community is the degree of each noed *)
       val comm_weights = Array.tabulate ((UGraph.num_vertices g), (fn i => (UGraph.degree (g, i))))
       (* W:O(d) S:O(log(d)) *)
@@ -17,12 +19,12 @@ struct
         let
           val neighbors = UGraph.neighbors (g, v)
           val degree = UGraph.degree (g, v)
-          val comm_old = Array.sub (communities,v)
+          val comm_old = Array.sub (comm,v)
           val k_i = Real.fromInt degree
           (* W:O(d) S:O(log(d))  neighbor_comm_delta_weights *)
           fun calc_k_i_in (comm_new) = 
             Parallel.reduce op+ 0 (0, degree) (fn (neighbor_i) => 
-              if comm_new = (Array.sub (communities, (Seq.nth neighbors neighbor_i))) then 1
+              if comm_new = (Array.sub (comm, (Seq.nth neighbors neighbor_i))) then 1
               else 0
             )
           
@@ -32,21 +34,12 @@ struct
           fun f (neighbor_i) = 
             let
               val neighbor = Seq.nth neighbors neighbor_i
-              val comm_new = Array.sub (communities, neighbor)
+              val comm_new = Array.sub (comm, neighbor)
               val k_i_in = Real.fromInt (calc_k_i_in comm_new)
               val sigma_tot = if comm_new = comm_old 
                 then Real.fromInt(Array.sub (comm_weights, comm_new)) - k_i
                 else Real.fromInt(Array.sub (comm_weights, comm_new))
               val delta_Q = k_i_in - k_i * sigma_tot / m
-              (* val _ = print (
-                "nb_i:" ^ Int.toString neighbor_i ^ 
-                " comm_new:" ^ Int.toString comm_new ^
-                " k_i_in:" ^ Real.toString k_i_in ^
-                " sigma_tot:" ^ Real.toString sigma_tot ^
-                " k_i:" ^ Real.toString k_i ^
-                " m:" ^ Real.toString m ^
-                " delta_Q:" ^ Real.toString delta_Q ^ "\n"
-              ) *)
             in
               (comm_new, delta_Q)
             end
@@ -62,7 +55,8 @@ struct
             let
               (* Concurrent Safe *)
               val degree = UGraph.degree (g, v)
-              val _ = Array.update (communities, v, comm_new)
+              val _ = Array.update (comm, v, comm_new)
+              val _ = Array.update (comm_history, v, comm_old)
               val _ = print ((Int.toString v) ^ " Move from " ^ (Int.toString comm_old) ^ " to " ^ (Int.toString comm_new) ^ "\n")
               
               fun atomic_update_comm (comm, add_or_sub, delta_degree) = 
@@ -75,11 +69,6 @@ struct
                     then (stable := false) (* CAS succeeded *)
                     else atomic_update_comm(comm, add_or_sub, delta_degree) (* CAS failed, retry with the new current value *)
                 end
-
-              (* Concurrent Unsafe *)
-              (* val comm_weight_new = Array.sub (comm_weights, comm_new)
-                 val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree) 
-              *)
               (* Concurrent Safe *)
               val _ = atomic_update_comm (comm_old, op-, degree)
               val _ = atomic_update_comm (comm_new, op+, degree)
@@ -91,9 +80,10 @@ struct
             fn (v) => 
               let
                 val (comm_new, delta_Q) = Seq.nth expected_comm_seq v
-                val comm_old = Array.sub (communities, v)
+                val comm_old = Array.sub (comm, v)
+                val comm_old_old = Array.sub (comm_history, v)
               in
-                if delta_Q > 0.0 andalso comm_old <> comm_new 
+                if delta_Q > 0.0 andalso comm_old <> comm_new andalso comm_old_old <> comm_new
                   then update_comm (v, comm_old, comm_new)
                   else ()
               end
@@ -113,6 +103,6 @@ struct
     
       val round = update_comm_until_stable 0
     in
-      communities
+      comm
     end
 end
