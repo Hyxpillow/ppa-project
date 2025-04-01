@@ -92,7 +92,7 @@ struct
         end
       
       fun update_comm_until_stable (round) = 
-        if update_comm_in_parallel 
+        if update_comm_in_parallel ()
           then round 
           else update_comm_until_stable (round + 1)
     
