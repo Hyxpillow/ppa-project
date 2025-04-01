@@ -25,12 +25,10 @@ struct
               if comm_new = (Array.sub (communities, (Seq.nth neighbors neighbor_i))) then 1
               else 0
             )
-         (* find the comm with greater deltaQ *)
-          fun g ((comm1, delta1:real), (comm2, delta2:real)) = 
-            if (delta1 > delta2) orelse ((delta1 = delta2) andalso (comm1 = comm_old)) then 
-              (comm1, delta1)
-            else
-              (comm2, delta2)
+          fun g ((comm1, delta1), (comm2, delta2)) = 
+            if delta1 > delta2 then (comm1, delta1)
+            else if delta1 = delta2 then (comm1, delta1)
+            else (comm2, delta2)
           val z = (0, 0.0)
           fun f (neighbor_i) = 
             let
