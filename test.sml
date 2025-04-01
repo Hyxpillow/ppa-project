@@ -15,7 +15,7 @@ val _ = print ("Loaded graph in " ^ Time.fmt 4 tm ^ "s\n")
 val _ = print ("num vertices " ^ Int.toString (Graph.num_vertices graph) ^ "\n")
 val _ = print ("num edges    " ^ Int.toString (Graph.num_edges graph) ^ "\n") *)
 
-val g = Graph.load_from_snap_file filename
+val g = Graph.load_from_snap_file test_graphs
 val ug = UndirectedGraph.load_from_directed_graph g
 (* val res = Louvain.louvain (ug) *)
 val _ = print "--------------------\n"
