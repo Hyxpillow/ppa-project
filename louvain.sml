@@ -27,7 +27,7 @@ struct
             )
          (* find the comm with greater deltaQ *)
           fun g ((comm1, delta1), (comm2, delta2)) = 
-            if delta1 > delta2 orelse (delta1 = delta2 andalso comm1 = comm_old) then 
+            if (delta1 > delta2) orelse ((delta1 = delta2) andalso (comm1 = comm_old)) then 
               (comm1, delta1)
             else
               (comm2, delta2)
