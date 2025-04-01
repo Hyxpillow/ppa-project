@@ -6,9 +6,9 @@ push:
 	git commit -m "."
 	git push --force
 
-send_graph:
+send:
 	scp meGraph.txt yh5047@access.cims.nyu.edu:~/ppa/ppa-project/
 
-recv_comm:
+recv:
 	scp yh5047@access.cims.nyu.edu:~/ppa/ppa-project/comm.txt .
 
