@@ -72,7 +72,7 @@ struct
             in
               true (* updated in this round *)
             end
-          fun try_update_comm (v, stable:bool) = 
+          fun try_update_comm (v, stable:bool) : bool = 
             if v >= (UGraph.num_vertices g) then stable
             else
               let 
