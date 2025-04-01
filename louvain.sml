@@ -57,7 +57,7 @@ struct
               val degree = UGraph.degree (g, v)
               val _ = Array.update (comm, v, comm_new)
               val _ = Array.update (comm_history, v, comm_old)
-              val _ = print ((Int.toString v) ^ " Move from " ^ (Int.toString comm_old) ^ " to " ^ (Int.toString comm_new) ^ "\n")
+              (* val _ = print ((Int.toString v) ^ " Move from " ^ (Int.toString comm_old) ^ " to " ^ (Int.toString comm_new) ^ "\n") *)
               
               fun atomic_update_comm (comm, add_or_sub, delta_degree) = 
                 let
@@ -93,13 +93,9 @@ struct
         end
       
       fun update_comm_until_stable (round) = 
-        let
-          val _ = print ("ROUND" ^ (Int.toString round) ^ "\n" )
-        in
         if update_comm_in_parallel ()
           then round 
           else update_comm_until_stable (round + 1)
-        end
     
       val round = update_comm_until_stable 0
     in
