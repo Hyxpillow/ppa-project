@@ -72,7 +72,7 @@ struct
                   val result = Concurrency.casArray (comm_weights, comm) (old_weight, new_weight)
                 in
                   if result = old_weight
-                    then (!stable := false) (* CAS succeeded *)
+                    then (stable := false) (* CAS succeeded *)
                     else atomic_update_comm(comm, add_or_sub, delta_degree) (* CAS failed, retry with the new current value *)
                 end
 
