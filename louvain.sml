@@ -26,12 +26,12 @@ struct
               else 0
             )
           fun g ((comm1, delta1), (comm2, delta2)) = 
-            if delta1 > delta2 then (comm1, delta1)
-            else if delta1 < delta2 then (comm2, delta2)
+            if delta1 > delta2 then (comm1, delta1) else (comm2, delta2)
+            (* else if delta1 < delta2 then (comm2, delta2)
             else if comm1 = comm_old then (comm1, delta1)
             else if comm2 = comm_old  then (comm2, delta2)
-            else (comm1, delta1)
-            
+            else (comm1, delta1) *)
+
           val z = (0, 0.0)
           fun f (neighbor_i) = 
             let
@@ -41,7 +41,7 @@ struct
                 then Real.fromInt(Array.sub (comm_weights, comm_new)) - k_i
                 else Real.fromInt(Array.sub (comm_weights, comm_new))
               val delta_Q = k_i_in - k_i * sigma_tot / m
-              val _ = print (
+              (* val _ = print (
                 "nb_i:" ^ Int.toString neighbor_i ^ 
                 " comm_new:" ^ Int.toString comm_new ^
                 " k_i_in:" ^ Real.toString k_i_in ^
@@ -49,11 +49,11 @@ struct
                 " k_i:" ^ Real.toString k_i ^
                 " m:" ^ Real.toString m ^
                 " delta_Q:" ^ Real.toString delta_Q ^ "\n"
-              )
+              ) *)
             in
               (comm_new, delta_Q)
             end
-          val _ = print ("V: "^ Int.toString v ^ "\n")
+          (* val _ = print ("V: "^ Int.toString v ^ "\n") *)
         in
           (* W:O(d) S:O(log(d))  return {argmax_comm(delta_Q), max(delta_Q)}*)
           Parallel.reduce g z (0, degree) f
@@ -78,7 +78,7 @@ struct
                 val _ = Array.update (communities, v, comm_new)
                 val _ = Array.update (comm_weights, comm_old, comm_weight_old - degree)
                 val _ = Array.update (comm_weights, comm_new, comm_weight_new + degree)
-                val _ = print ("Move from " ^ Int.toString comm_old ^ " to "^ Int.toString comm_new ^ "\n")
+                (* val _ = print ("Move from " ^ Int.toString comm_old ^ " to "^ Int.toString comm_new ^ "\n") *)
               in
                 update_comm_until_stable (v + 1, false)
               end
