@@ -17,6 +17,6 @@ val _ = print ("V:" ^ (Int.toString (UndirectedGraph.num_vertices ug)) ^ " E:" ^
 
 (* val res = Louvain.louvain (ug) *)
 val _ = print "--------------------\n"
-val res = Benchmark.run (fn _ => Louvain.louvain ug)
+val comm = Benchmark.run (fn _ => Louvain.louvain ug)
 val _ = print "--------------------\n"
-(* val _ = Myprint.print_int_array res *)
+val _ = Myprint.f_print_int_array (comm, "comm.txt")

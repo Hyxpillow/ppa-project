@@ -5,3 +5,10 @@ push:
 	git add .
 	git commit -m "."
 	git push --force
+
+send_graph:
+	scp meGraph.txt yh5047@access.cims.nyu.edu:~/ppa/ppa-project/
+
+send_communities:
+	scp yh5047@access.cims.nyu.edu:~/ppa/ppa-project/comm.txt .
+
