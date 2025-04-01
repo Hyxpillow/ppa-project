@@ -28,7 +28,7 @@ struct
           
           fun g ((comm1, delta1), (comm2, delta2)) = 
             if delta1 > delta2 then (comm1, delta1) else (comm2, delta2)
-          val z = (0, 0.0, 0)
+          val z = (0, 0.0)
           fun f (neighbor_i) = 
             let
               val neighbor = Seq.nth neighbors neighbor_i
@@ -69,7 +69,7 @@ struct
                 let
                   val old_weight = Array.sub (comm_weights, comm)
                   val new_weight = add_or_sub (old_weight, delta_degree)
-                  val result = Concurrency.casArray (comm_weights, comm, old_weight, new_weight)
+                  val result = Concurrency.casArray (comm_weights, comm) (old_weight, new_weight)
                 in
                   if result = old_weight
                     then (!stable := false) (* CAS succeeded *)
