@@ -10,6 +10,9 @@ sig
   val num_vertices: graph -> int
   val num_edges: graph -> int
 
+  (* for newman-girvan algo *)
+  val remove_edge: graph * vertex * vertex -> graph
+
   val load_from_directed_graph: Graph.graph -> graph
 end =
 struct
@@ -34,8 +37,7 @@ struct
 
       val undirected_edges = Seq.tabulate (fn u =>
         dedup Int.compare (
-          Merge.merge Int.compare
-            (
+          Merge.merge Int.compare (
             (* eliminate self-loop *)
             Seq.filter (fn v => v <> u) (Graph.out_neighbors (g, u)), 
             Seq.filter (fn v => v <> u) (Graph.in_neighbors (g, u))
@@ -70,4 +72,25 @@ struct
 
   fun neighbors (g as G {n, off, ...}, v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
+  
+  (* W:O(n)*)
+  fun remove_edge (g as G {n, off}, u:vertex, v:vertex) : graph =
+    let
+      val u_lo = Seq.nth off u
+      val u_hi = u_lo + (degree (g, u))
+      val v_lo = Seq.nth off v
+      val v_hi = v_lo + (degree (g, v))
+
+      val n' = Parallel.filter (0, (Seq.length n)) 
+        (fn (i) => Seq.nth n i)
+        (fn (i) =>  
+          if u_lo <= i andalso i < u_hi andalso i = u then false
+          else if v_lo <= i andalso i < v_hi andalso i = v then false
+          else true
+        )
+      val off' = Parallel.scan op+ 0 (0, (Seq.length off)) 
+        (fn (i) => if u <> i andalso v <> i then degree (g, i) else degree (g, i) - 1)
+    in
+      G {n = n', off = off'}
+    end
 end
