@@ -9,8 +9,6 @@ struct
 
   fun newman_girvan (g:UndirectedGraph.t) : int array = 
     let
-      val m = Real.fromInt (UGraph.num_edges g)
-      
       fun get_comm (g': UGraph.t) : int array * int =
         let
           val comm = Array.array ((UGraph.num_vertices g'), ~1)
@@ -49,19 +47,21 @@ struct
         let
           fun get_comm_Q (comm_i) : real = 
             let
-              val dc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g)
+              val m' = Real.fromInt (UGraph.num_edges g)
+              val dc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g')
                 (fn (v) => if Array.sub(comm, v) <> comm_i then 0 
-                  else UGraph.degree (g, v)
+                  else UGraph.degree (g', v)
                 )
-              val lc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g)
+              val lc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g')
                 (fn (v) => if Array.sub(comm, v) <> comm_i then 0 
-                  else Parallel.reduce op+ 0 (0, UGraph.degree (g',v)) (fn (u) => if Array.sub(comm, u) <> comm_i then 0 else 1)
+                  else Parallel.reduce op+ 0 (0, UGraph.degree (g',v)) 
+                    (fn (u) => if Array.sub(comm, u) <> comm_i then 0 else 1)
                 )
 
               val dc_real = Real.fromInt dc
               val lc_real = Real.fromInt (lc div 2)
             in
-              lc_real - (dc_real * dc_real / 4.0 / m)
+              lc_real - (dc_real * dc_real / 4.0 / m')
             end
           val res = Parallel.reduce op+ 0.0 (0, comm_count) 
             (fn (comm_i) => get_comm_Q(comm_i))
