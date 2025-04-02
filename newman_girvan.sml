@@ -82,9 +82,9 @@ struct
             val cur_Q = if comm_count < best_comm_count 
               then get_Q (g', comm, comm_count)
               else 0.0
-            val _ = if cur_Q > max_Q then best_g := g' else ()
-            val _ = if cur_Q > max_Q then best_comm_count := comm_count else ()
-            val _ = if cur_Q > max_Q then max_Q := cur_Q else ()
+            val _ = if cur_Q > !max_Q then best_g := g' else ()
+            val _ = if cur_Q > !max_Q then best_comm_count := comm_count else ()
+            val _ = if cur_Q > !max_Q then max_Q := cur_Q else ()
           in
             loop_until_no_edge g'
           end
