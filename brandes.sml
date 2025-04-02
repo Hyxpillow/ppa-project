@@ -90,9 +90,13 @@ struct
         fun g ((u1, v1, c1), (u2, v2, c2)) = if c1 > c2 then (u1, v1, c1) else (u2, v2, c2)
         val z = (0, 0, 0.0)
         fun f (u) = Parallel.reduce g z (u + 1, n) 
-          (fn (v) => (
-            (print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString Array.sub(Array.sub(edge_centrality, u), v) ^ "\n"));
-            (u, v, Array.sub(Array.sub(edge_centrality, u), v))))
+          (fn (v) => 
+            let
+              val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString Array.sub(Array.sub(edge_centrality, u), v) ^ "\n")
+            in
+              (u, v, Array.sub(Array.sub(edge_centrality, u), v))
+            end
+            )
         
         val (best_u, best_v, best_c) = Parallel.reduce g z (0, n) f
 
