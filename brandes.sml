@@ -99,8 +99,6 @@ struct
             )
         
         val (best_u, best_v, best_c) = Parallel.reduce g z (0, n) f
-
-        (* val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString Array.sub(Array.sub(edge_centrality, u), v) ^ "\n") *)
     in
       (best_u, best_v)
     end   
