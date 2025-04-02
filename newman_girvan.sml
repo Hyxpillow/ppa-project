@@ -65,19 +65,19 @@ struct
 
               val dc_real = Real.fromInt dc
               val lc_real = Real.fromInt (lc div 2)
-              val _ = Myprint.print_int_array comm
-              val _ = print 
+              (* val _ = Myprint.print_int_array comm *)
+              (* val _ = print 
                 ("comm:" ^ Int.toString comm_i ^ 
                  " lc:" ^ Real.toString lc_real ^ 
                  " dc:" ^ Real.toString dc_real ^
                  " m':" ^ Real.toString m' ^
-                 "\n")
+                 "\n") *)
             in
               (lc_real / m') - (dc_real * dc_real / 4.0 / m' / m')
             end
           val res = Parallel.reduce op+ 0.0 (0, comm_count) 
             (fn (comm_i) => get_comm_Q(comm_i))
-          val _ = print ("Q:" ^ Real.toString res ^ "\n")
+          (* val _ = print ("Q:" ^ Real.toString res ^ "\n") *)
         in
           res
         end
@@ -90,18 +90,18 @@ struct
         if (UGraph.num_edges g) = 0 then ()
         else 
           let
-            val _ = print ("edge: " ^ Int.toString (UGraph.num_edges g) ^ "\n")
+            (* val _ = print ("edge: " ^ Int.toString (UGraph.num_edges g) ^ "\n") *)
             val (u, v) = Brandes.get_max_betweenness (g)
-            val _ = print ("remove: " ^ Int.toString u ^ " " ^ Int.toString v ^ "\n")
+            (* val _ = print ("remove: " ^ Int.toString u ^ " " ^ Int.toString v ^ "\n") *)
             val g' = UGraph.remove_edge (g, u, v)
 
             val (comm, comm_count) = get_comm (g')
-            val _ = print ("comm_count: " ^ Int.toString comm_count ^ "\n")
-            val _ = print ("best_count: " ^ Int.toString (!best_comm_count) ^ "\n")
+            (* val _ = print ("comm_count: " ^ Int.toString comm_count ^ "\n") *)
+            (* val _ = print ("best_count: " ^ Int.toString (!best_comm_count) ^ "\n") *)
             val cur_Q = if comm_count <> !best_comm_count 
               then get_Q (g', comm, comm_count)
               else 0.0
-            val _ = print ("maxQ: " ^ (Real.toString (!max_Q)) ^ "\n")
+            (* val _ = print ("maxQ: " ^ (Real.toString (!max_Q)) ^ "\n") *)
             val _ = if cur_Q > !max_Q then best_g := g' else ()
             val _ = if cur_Q > !max_Q then best_comm_count := comm_count else ()
             val _ = if cur_Q > !max_Q then max_Q := cur_Q else ()

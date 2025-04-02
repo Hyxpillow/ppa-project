@@ -92,8 +92,8 @@ struct
         )
       val off' = Parallel.scan op+ 0 (0, (Seq.length off) - 1) 
         (fn (i) => if u <> i andalso v <> i then degree (g, i) else degree (g, i) - 1)
-      val _ = Myprint.print_int_seq n'
-      val _ = Myprint.print_int_seq off'
+      (* val _ = Myprint.print_int_seq n' *)
+      (* val _ = Myprint.print_int_seq off' *)
     in
       G {n = n', off = off'}
     end
