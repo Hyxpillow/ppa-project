@@ -84,8 +84,10 @@ struct
       val n' = Parallel.filter (0, (Seq.length n)) 
         (fn (i) => Seq.nth n i)
         (fn (i) =>  
-          if u_lo <= i andalso i < u_hi andalso (Seq.nth n i) = u then false
-          else if v_lo <= i andalso i < v_hi andalso (Seq.nth n i) = v then false
+          if u_lo <= i andalso i < u_hi 
+            andalso ((Seq.nth n i) = u orelse (Seq.nth n i) = v) then false
+          else if v_lo <= i andalso i < v_hi 
+            andalso ((Seq.nth n i) = u orelse (Seq.nth n i) = v) then false
           else true
         )
       val off' = Parallel.scan op+ 0 (0, (Seq.length off)) 
