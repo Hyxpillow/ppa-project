@@ -20,42 +20,48 @@ struct
             val stack = ref ([]: int list)
             val queue = ref [s]
 
-            val _ = (Array.update(sigma, s, 1); Array.update(dist, s, 0))
+            val _ = (
+            Array.update(sigma, s, 1);
+            Array.update(dist, s, 0)
+            )
 
-            (* BFS 阶段 *)
-            fun bfs [] = ()
-            | bfs (v::vs) =
-                let
-                    val () = stack := v :: !stack
-                    val nbrs = Seq.toList (UGraph.neighbors (g, v))
+            (* 修正后的 BFS *)
+            fun bfs () =
+              case !queue of
+                [] => ()
+              | v::vs =>
+              let
+                val () = queue := vs
+                val () = stack := v :: !stack
+                val nbrs = Seq.toList (UGraph.neighbors (g, v))
 
-                    fun visit [] = ()
-                    | visit (w::ws) =
+            fun visit [] = ()
+                | visit (w::ws) =
+                    let
+                    val d_v = Array.sub(dist, v)
+                    val d_w = Array.sub(dist, w)
+                    in
+                    if d_w = ~1 then (
+                        Array.update(dist, w, d_v + 1);
+                        queue := !queue @ [w]
+                    ) else ();
+
+                    if Array.sub(dist, w) = d_v + 1 then (
+                        Array.update(sigma, w, Array.sub(sigma, w) + Array.sub(sigma, v));
                         let
-                            val d_v = Array.sub(dist, v)
-                            val d_w = Array.sub(dist, w)
+                        val old = !(Array.sub(pred, w))
                         in
-                          if d_w = ~1 then (
-                            Array.update(dist, w, d_v + 1);
-                            queue := !queue @ [w]
-                          ) else ();
-
-                          if Array.sub(dist, w) = d_v + 1 then (
-                            Array.update(sigma, w, Array.sub(sigma, w) + Array.sub(sigma, v));
-                            let
-                                val old = !(Array.sub(pred, w))
-                            in
-                                Array.update(pred, w, ref (v :: old))
-                            end
-                            ) else ();
-                            visit ws
+                        Array.update(pred, w, ref (v :: old))
                         end
-                in
-                    visit nbrs;
-                    bfs vs
-                end
+                    ) else ();
+                    visit ws
+                    end
+            in
+                visit nbrs;
+                bfs ()
+            end
 
-            val _ = bfs [s]
+            val _ = bfs ()
 
             (* 回传依赖度阶段 *)
             fun backprop [] = ()
