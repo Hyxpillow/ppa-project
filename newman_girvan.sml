@@ -39,8 +39,7 @@ struct
               dfs(v, label);
               visit_all(v + 1, label + 1)
             )
-          val comm_count = visit_all(0, 1)
-          val _ = Myprint.print_int_array comm
+          val comm_count = visit_all(0, 1) - 1
         in
             (comm, comm_count)
         end
