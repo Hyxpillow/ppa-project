@@ -64,7 +64,7 @@ struct
                 ("comm:" ^ Int.toString comm_i ^ 
                  " lc:" ^ Real.toString lc_real ^ 
                  " dc:" ^ Real.toString dc_real ^
-                 " m':" ^  Int.toString m' ^
+                 " m':" ^ Real.toString m' ^
                  "\n")
             in
               (lc_real / m') - (dc_real * dc_real / 4.0 / m' / m')
