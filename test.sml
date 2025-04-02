@@ -1,23 +1,23 @@
-val test_graphs =
-  [ "test-graph/g1.txt"
-  , "test-graph/g2.txt"
-  , "test-graph/g3.txt"
-  , "test-graph/g4.txt"
-  , "test-graph/g5.txt"
-  , "test-graph/g6.txt"
-  , "test-graph/g7.txt"
-  ]
+(* val test_graphs = "test-graph/g6.txt" *)
+val filename =
+  List.hd (CommandLineArgs.positional ())
+  handle _ => Util.die "Usage: ./test @mpl procs <P> -- <SNAP_FILENAME>"
+
+structure Louvain = Louvain
+structure GN = NewmanGirvan
+structure Myprint = Myprint
+structure UndirectedGraph = UndirectedGraph
 
 
-fun test_tc (i, n) filename =
-  let
-    val g = Graph.load_from_snap_file filename
-  in
-    print
-        ("V:" ^ Int.toString Graph.num_vertices g ^ " E:" Int.toString Graph.num_edges g ^ "\n")
-  end
+val _ = print "Loading graph (if large, this might take a while...)\n"
+val (g, tm1) = Util.getTime (fn _ => Graph.load_from_snap_file filename)
+val _ = print ("Loaded graph in " ^ Time.fmt 4 tm1 ^ "s\n")
+val (ug, tm2) = Util.getTime (fn _ => UndirectedGraph.load_from_directed_graph g)
+val _ = print ("Loaded undirected graph in " ^ Time.fmt 4 tm2 ^ "s\n")
+val _ = print ("V:" ^ (Int.toString (UndirectedGraph.num_vertices ug)) ^ " E:" ^ (Int.toString (UndirectedGraph.num_edges ug)) ^ "\n")
 
-val num_tests = List.length test_graphs
-val _ =
-  List.foldl (fn (test, i) => (test_tc (i, num_tests) test; i + 1)) 1
-    test_graphs
+(* val res = Louvain.louvain (ug) *)
+val _ = print "--------------------\n"
+val comm = Benchmark.run (fn _ => GN.newman_girvan ug)
+val _ = print "--------------------\n"
+val _ = Myprint.f_print_int_array (comm, "comm.txt")
