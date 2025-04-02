@@ -34,7 +34,7 @@ struct
 
           fun visit_all (v, label) =
             if v = (UGraph.num_vertices g') then label
-            else if Array.sub(comm, v) <> 0 then visit_all(v + 1, label)
+            else if Array.sub(comm, v) <> ~1 then visit_all(v + 1, label)
             else (
               dfs(v, label);
               visit_all(v + 1, label + 1)
