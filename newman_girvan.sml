@@ -54,8 +54,13 @@ struct
                 )
               val lc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g')
                 (fn (v) => if Array.sub(comm, v) <> comm_i then 0 
-                  else Parallel.reduce op+ 0 (0, UGraph.degree (g',v)) 
-                    (fn (u) => if Array.sub(comm, u) <> comm_i then 0 else 1)
+                  else 
+                    let 
+                      val nbrs = UGraph.neighbors (g', v)
+                    in
+                      Parallel.reduce op+ 0 (0, UGraph.degree (g',v)) 
+                        (fn (nbr_i) => if Array.sub(comm, (Seq.nth nbrs nbr_i)) <> comm_i then 0 else 1)
+                    end
                 )
 
               val dc_real = Real.fromInt dc
