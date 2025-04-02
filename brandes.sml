@@ -92,7 +92,7 @@ struct
         fun f (u) = Parallel.reduce g z (u + 1, n) 
           (fn (v) => 
             let
-              val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString Array.sub(Array.sub(edge_centrality, u), v) ^ "\n")
+              val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString (Array.sub(Array.sub(edge_centrality, u), v)) ^ "\n")
             in
               (u, v, Array.sub(Array.sub(edge_centrality, u), v))
             end
