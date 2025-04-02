@@ -60,6 +60,12 @@ struct
 
               val dc_real = Real.fromInt dc
               val lc_real = Real.fromInt (lc div 2)
+              val _ = print 
+                ("comm:" ^ Int.toString comm_i ^ 
+                 " lc:" ^ Real.toString lc_real ^ 
+                 " dc:" ^ Real.toString dc_real ^
+                 " m':" ^  Int.toString m' ^
+                 "\n")
             in
               (lc_real / m') - (dc_real * dc_real / 4.0 / m' / m')
             end
