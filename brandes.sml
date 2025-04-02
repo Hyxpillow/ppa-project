@@ -57,8 +57,6 @@ struct
 
             val _ = bfs [s]
 
-            val _ = Myprint.print_int_array sigma
-
             (* 回传依赖度阶段 *)
             fun backprop [] = ()
             | backprop (w::ws) =
@@ -76,6 +74,8 @@ struct
                             val (u', v') = if v < w then (v, w) else (w, v)
                             val old_val = Array.sub(Array.sub(edge_centrality, u'), v')
                             val _ = Array.update(Array.sub(edge_centrality, u'), v', old_val + contrib)
+                            val _ = print ("old:" ^ (Real.toString old_val) ^ " delta:" ^ (Real.toString contrib) ^ " new:" ^ (Array.sub(Array.sub(edge_centrality, u'), v')) ^ "\n")
+                            
                         in
                             update_preds vs
                         end
