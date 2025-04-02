@@ -1,6 +1,6 @@
+myprint.sml
 lib/github.com/mpllang/mpllib/sources.mpl.mlb
 lib-local/sources.mpl.mlb
-myprint.sml
 brandes.sml
 newman_girvan.sml
 louvain.sml

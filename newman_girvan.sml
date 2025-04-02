@@ -78,9 +78,9 @@ struct
           let
             val _ = print ("edge: " ^ Int.toString (UGraph.num_edges g) ^ "\n")
             val (u, v) = Brandes.get_max_betweenness (g)
-            val _ = print ("betw: " ^ Int.toString u ^ " " ^ Int.toString v ^ "\n")
-            val g' = UGraph.remove_edge (g, u, v)
             val _ = print ("remove: " ^ Int.toString u ^ " " ^ Int.toString v ^ "\n")
+            val g' = UGraph.remove_edge (g, u, v)
+            
             val (comm, comm_count) = get_comm (g')
             val _ = print ("comm_count: " ^ Int.toString comm_count ^ "\n")
 

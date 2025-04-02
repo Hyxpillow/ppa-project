@@ -86,21 +86,8 @@ struct
         end
 
         val _ = List.app process_source (List.tabulate(n, fn i => i))
-
-        (* 找出最大边 (u, v) *)
-        fun find_max u v (best_u, best_v, best_val) =
-        let
-            val val_uv = Array.sub(Array.sub(edge_centrality, u), v)
-        in
-            if val_uv > best_val then (u, v, val_uv) else (best_u, best_v, best_val)
-        end
-
-        fun search u v (best_u, best_v, best_val) =
-        if u >= n then (best_u, best_v)
-        else if v >= n then search (u + 1) (u + 2) (best_u, best_v, best_val)
-        else search u (v + 1) (find_max u v (best_u, best_v, best_val))
-
+        (* val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString Array.sub(Array.sub(edge_centrality, u), v) ^ "\n") *)
     in
-        search 0 1 (0, 1, ~1.0)
+      (0, 1)
     end   
 end
