@@ -63,9 +63,11 @@ struct
             in
               lc_real - (dc_real * dc_real / 4.0 / m)
             end
-        in
-          Parallel.reduce op+ 0.0 (0, comm_count) 
+          val res = Parallel.reduce op+ 0.0 (0, comm_count) 
             (fn (comm_i) => get_comm_Q(comm_i))
+          val _ = print ("Q:" ^ Real.toString res ^ "\n")
+        in
+          res
         end
 
       val max_Q = ref 0.0
@@ -87,7 +89,7 @@ struct
             val cur_Q = if comm_count < !best_comm_count 
               then get_Q (g', comm, comm_count)
               else 0.0
-            val _ = print ("curQ: " ^ Real.toString cur_Q ^ "\n")
+            val _ = print ("maxQ: " ^ Real.toString !max_Q ^ "\n")
             val _ = if cur_Q > !max_Q then best_g := g' else ()
             val _ = if cur_Q > !max_Q then best_comm_count := comm_count else ()
             val _ = if cur_Q > !max_Q then max_Q := cur_Q else ()
