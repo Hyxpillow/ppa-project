@@ -60,6 +60,7 @@ struct
 
               val dc_real = Real.fromInt dc
               val lc_real = Real.fromInt (lc div 2)
+              val _ = Myprint.print_int_array comm
               val _ = print 
                 ("comm:" ^ Int.toString comm_i ^ 
                  " lc:" ^ Real.toString lc_real ^ 
