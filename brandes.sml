@@ -35,12 +35,12 @@ struct
                             val d_v = Array.sub(dist, v)
                             val d_w = Array.sub(dist, w)
                         in
-                            if d_w = ~1 then (
+                          if d_w = ~1 then (
                             Array.update(dist, w, d_v + 1);
                             queue := !queue @ [w]
-                            ) else ();
+                          ) else ();
 
-                            if Array.sub(dist, w) = d_v + 1 then (
+                          if Array.sub(dist, w) = d_v + 1 then (
                             Array.update(sigma, w, Array.sub(sigma, w) + Array.sub(sigma, v));
                             let
                                 val old = !(Array.sub(pred, w))
@@ -56,6 +56,8 @@ struct
                 end
 
             val _ = bfs [s]
+
+            val _ = Myprint.print_int_array sigma
 
             (* 回传依赖度阶段 *)
             fun backprop [] = ()
@@ -92,7 +94,7 @@ struct
         fun f (u) = Parallel.reduce g z (u + 1, n) 
           (fn (v) => 
             let
-              val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString (Array.sub(Array.sub(edge_centrality, u), v)) ^ "\n")
+              (* val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString (Array.sub(Array.sub(edge_centrality, u), v)) ^ "\n") *)
             in
               (u, v, Array.sub(Array.sub(edge_centrality, u), v))
             end
