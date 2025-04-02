@@ -4,6 +4,7 @@ val filename =
   handle _ => Util.die "Usage: ./test @mpl procs <P> -- <SNAP_FILENAME>"
 
 structure Louvain = Louvain
+structure GN = NewmanGirvan
 structure Myprint = Myprint
 structure UndirectedGraph = UndirectedGraph
 
@@ -17,6 +18,6 @@ val _ = print ("V:" ^ (Int.toString (UndirectedGraph.num_vertices ug)) ^ " E:" ^
 
 (* val res = Louvain.louvain (ug) *)
 val _ = print "--------------------\n"
-val comm = Benchmark.run (fn _ => Louvain.louvain ug)
+val comm = Benchmark.run (fn _ => GN.newman_girvan ug)
 val _ = print "--------------------\n"
 val _ = Myprint.f_print_int_array (comm, "comm.txt")
