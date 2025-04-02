@@ -90,8 +90,9 @@ struct
             andalso ((Seq.nth n i) = u orelse (Seq.nth n i) = v) then false
           else true
         )
-      val off' = Parallel.scan op+ 0 (0, (Seq.length off)) 
+      val off'' = Parallel.scan op+ 0 (0, (Seq.length off)) 
         (fn (i) => if u <> i andalso v <> i then degree (g, i) else degree (g, i) - 1)
+      val off' = Seq.take (off'', Seq.length off)
       val _ = Myprint.print_int_seq n
       val _ = Myprint.print_int_seq off
       val _ = Myprint.print_int_seq n'
