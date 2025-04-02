@@ -91,7 +91,11 @@ struct
         val z = (0, 0, 0.0)
         fun f (u) = Parallel.reduce g z (u + 1, n) 
           (fn (v) => (u, v, Array.sub(Array.sub(edge_centrality, u), v)))
+        
         val (best_u, best_v, best_c) = Parallel.reduce g z (0, n) f
+        val _ = print ("best_u:" ^ (Int.toString best_u))
+        val _ = print ("best_v:" ^ (Int.toString best_v))
+        val _ = print ("best_c:" ^ (Real.toString best_c))
         (* val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString Array.sub(Array.sub(edge_centrality, u), v) ^ "\n") *)
     in
       (best_u, best_v)
