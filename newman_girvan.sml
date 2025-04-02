@@ -89,7 +89,7 @@ struct
             loop_until_no_edge g'
           end
       val _ = loop_until_no_edge g
-      val (comm, _) = get_comm(best_g)
+      val (comm, _) = get_comm(!best_g)
     in
       comm
     end
