@@ -85,7 +85,7 @@ struct
 
             val (comm, comm_count) = get_comm (g')
             val _ = print ("comm_count: " ^ Int.toString comm_count ^ "\n")
-
+            val _ = print ("best_count: " ^ Int.toString (!best_comm_count) ^ "\n")
             val cur_Q = if comm_count < !best_comm_count 
               then get_Q (g', comm, comm_count)
               else 0.0
