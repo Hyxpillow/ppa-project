@@ -76,6 +76,7 @@ struct
         if (UGraph.num_edges g) = 0 then ()
         else 
           let
+            val _ = print ("edge: " ^ Int.toString (UGraph.num_edges g) ^ "\n")
             val (u, v) = Brandes.get_max_betweenness (g)
             val g' = UGraph.remove_edge (g, u, v)
             val (comm, comm_count) = get_comm (g')
