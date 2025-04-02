@@ -21,7 +21,7 @@ struct
               let
                 val neighbors = UGraph.neighbors (g', v)
                 val start = 0
-                val end = UGraph.degree (g', v)
+                val stop = UGraph.degree (g', v)
                 fun loop i =
                   if i < stop then (
                     dfs (Seq.nth neighbors i, label);
