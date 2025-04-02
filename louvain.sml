@@ -2,6 +2,7 @@ structure Louvain:
 sig
   val louvain: UndirectedGraph.t -> int array
 end =
+
 struct
   structure UGraph = UndirectedGraph
   structure Myprint = Myprint
