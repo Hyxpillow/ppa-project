@@ -13,18 +13,18 @@ struct
       
       fun get_comm (g': UGraph.t) : int array * int =
         let
-          val comm = Array.array ((UGraph.num_vertices g'), 0)
+          val comm = Array.array ((UGraph.num_vertices g'), ~1)
           fun dfs (v, label) =
-            if Array.sub(comm, v) <> 0 then ()
+            if Array.sub(comm, v) <> ~1 then ()
             else (
               Array.update(comm, v, label);
               let
-                val neighbors = UGraph.neighbors (g', v)
+                val nbrs = UGraph.neighbors (g', v)
                 val start = 0
                 val stop = UGraph.degree (g', v)
                 fun loop i =
                   if i < stop then (
-                    dfs (Seq.nth neighbors i, label);
+                    dfs (Seq.nth nbrs i, label);
                     loop (i + 1)
                   ) else ()
               in
