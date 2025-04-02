@@ -61,7 +61,7 @@ struct
               val dc_real = Real.fromInt dc
               val lc_real = Real.fromInt (lc div 2)
             in
-              lc_real - (dc_real * dc_real / 4.0 / m')
+              (lc_real / m') - (dc_real * dc_real / 4.0 / m' / m')
             end
           val res = Parallel.reduce op+ 0.0 (0, comm_count) 
             (fn (comm_i) => get_comm_Q(comm_i))
