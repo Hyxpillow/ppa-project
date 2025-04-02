@@ -47,7 +47,7 @@ struct
       (* find all the components and calculate the total Q *)
       fun get_Q (g', comm, comm_count) : real = 
         let
-          fun get_comm_Q (comm_i) = 
+          fun get_comm_Q (comm_i) : real = 
             let
               val dc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g)
                 (fn (v) => if Array.sub(comm, v) <> comm_i then 0 
@@ -64,7 +64,7 @@ struct
               lc_real - (dc_real * dc_real / 4.0 / m)
             end
         in
-          Parallel.reduce op+ 0 (0, comm_count) 
+          Parallel.reduce op+ 0.0 (0, comm_count) 
             (fn (comm_i) => get_comm_Q(comm_i))
         end
 
@@ -79,7 +79,7 @@ struct
             val (u, v) = Brandes.get_max_betweenness (g)
             val g' = UGraph.remove_edge (g, u, v)
             val (comm, comm_count) = get_comm (g')
-            val cur_Q = if comm_count < best_comm_count 
+            val cur_Q = if comm_count < !best_comm_count 
               then get_Q (g', comm, comm_count)
               else 0.0
             val _ = if cur_Q > !max_Q then best_g := g' else ()
