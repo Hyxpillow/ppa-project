@@ -11,7 +11,7 @@ struct
     let
       val m = Real.fromInt (UGraph.num_edges g)
       
-      fun get_comm (g': UGraph.t) : (int array, int) =
+      fun get_comm (g': UGraph.t) : int array * int =
         let
           val comm = Array.array ((UGraph.num_vertices g'), 0)
           fun dfs (v, label) =
@@ -78,7 +78,7 @@ struct
           let
             val (u, v) = Brandes.get_max_betweenness (g)
             val g' = UGraph.remove_edge (g, u, v)
-            val (comm, comm_count) = get_comm g'
+            val (comm, comm_count) = get_comm (g')
             val cur_Q = if comm_count < best_comm_count 
               then get_Q (g', comm, comm_count)
               else 0.0
