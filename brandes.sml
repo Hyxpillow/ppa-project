@@ -28,7 +28,7 @@ struct
           | bfs (v::vs) =
               let
                 val () = stack := v :: !stack
-                val nbrs = UGraph.neighbors (g, v) |> Seq.toList
+                val nbrs = Seq.toList (UGraph.neighbors (g, v))
                 fun visit [] = ()
                   | visit (w::ws) =
                       let
