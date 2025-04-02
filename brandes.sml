@@ -86,8 +86,14 @@ struct
         end
 
         val _ = List.app process_source (List.tabulate(n, fn i => i))
+
+        fun g ((u1, v1, c1), (u2, v2, c2)) = if c1 > c2 then (u1, v1, c1) else (u2, v2, c2)
+        val z = (0, 0, 0.0)
+        fun f (u) = Parallel.reduce g z (u + 1, n) 
+          (fn (v) => Array.sub(Array.sub(edge_centrality, u), v))
+        val (best_u, best_v, best_c) = Parallel.reduce g z (0, n) f
         (* val _ = print ("[" ^ Int.toString u ^ "->" ^ Int.toString v ^ "]=" ^ Real.toString Array.sub(Array.sub(edge_centrality, u), v) ^ "\n") *)
     in
-      (0, 1)
+      (best_u, best_v)
     end   
 end
