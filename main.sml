@@ -33,4 +33,4 @@ val comm =
   else 
     Benchmark.run (fn _ => GN.newman_girvan ug)
 val _ = print "--------------------\n"
-val _ = Myprint.f_print_int_array (comm, ("output" ^ filename))
+val _ = Myprint.f_print_int_array (comm, ("output/" ^ filename))
