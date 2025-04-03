@@ -20,7 +20,7 @@ structure UndirectedGraph = UndirectedGraph
 
 
 val _ = print "Loading graph (if large, this might take a while...)\n"
-val (g, tm1) = Util.getTime (fn _ => Graph.load_from_snap_file (indir ^ "\\" ^ filename))
+val (g, tm1) = Util.getTime (fn _ => Graph.load_from_snap_file (indir ^ "/" ^ filename))
 val _ = print ("Loaded graph in " ^ Time.fmt 4 tm1 ^ "s\n")
 val (ug, tm2) = Util.getTime (fn _ => UndirectedGraph.load_from_directed_graph g)
 val _ = print ("Loaded undirected graph in " ^ Time.fmt 4 tm2 ^ "s\n")
