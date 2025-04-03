@@ -1,4 +1,8 @@
 lib/github.com/mpllang/mpllib/sources.mpl.mlb
 lib-local/sources.mpl.mlb
-src/src.mlb
+src/Myprint.sml
+src/UndirectedGraph.sml
+src/brandes.sml
+src/newman_girvan.sml
+src/louvain.sml
 main.sml
