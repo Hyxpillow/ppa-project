@@ -1,10 +1,13 @@
 val args = CommandLineArgs.positional ()
 val filename =
-  List.nth (args, 1)
-  handle _ => Util.die "Usage: ./main @mpl procs <P> -- <ALGO=gn|louvain> <SNAP_FILENAME>"
+  List.nth (args, 2)
+  handle _ => Util.die "Usage: ./main @mpl procs <P> -- <ALGO=[gn|louvain]> <DIR> <SNAP_FILENAME>"
 val algo =
   List.nth (args, 0)
-  handle _ => Util.die "Usage: ./main @mpl procs <P> -- <ALGO=gn|louvain> <SNAP_FILENAME>"
+  handle _ => Util.die "Usage: ./main @mpl procs <P> -- <ALGO=[gn|louvain]> <DIR> <SNAP_FILENAME>"
+val indir =
+  List.nth (args, 1)
+  handle _ => Util.die "Usage: ./main @mpl procs <P> -- <ALGO=[gn|louvain]> <DIR> <SNAP_FILENAME>"
 val _ =
   if algo <> "louvain" andalso algo <> "gn"
   then Util.die "Algorithm must be 'louvain' or 'gn'"
@@ -17,7 +20,7 @@ structure UndirectedGraph = UndirectedGraph
 
 
 val _ = print "Loading graph (if large, this might take a while...)\n"
-val (g, tm1) = Util.getTime (fn _ => Graph.load_from_snap_file filename)
+val (g, tm1) = Util.getTime (fn _ => Graph.load_from_snap_file (indir ^ "\\" ^ filename))
 val _ = print ("Loaded graph in " ^ Time.fmt 4 tm1 ^ "s\n")
 val (ug, tm2) = Util.getTime (fn _ => UndirectedGraph.load_from_directed_graph g)
 val _ = print ("Loaded undirected graph in " ^ Time.fmt 4 tm2 ^ "s\n")
@@ -30,4 +33,4 @@ val comm =
   else 
     Benchmark.run (fn _ => GN.newman_girvan ug)
 val _ = print "--------------------\n"
-val _ = Myprint.f_print_int_array (comm, "comm.txt")
+val _ = Myprint.f_print_int_array (comm, ("output" ^ filename))
