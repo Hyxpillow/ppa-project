@@ -1,6 +1,4 @@
 lib/github.com/mpllang/mpllib/sources.mpl.mlb
 lib-local/sources.mpl.mlb
-src/brandes.sml
-src/newman_girvan.sml
-src/louvain.sml
+src/src.mlb
 main.sml

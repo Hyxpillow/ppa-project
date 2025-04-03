@@ -1,7 +1,14 @@
-(* val test_graphs = "test-graph/g6.txt" *)
+val args = CommandLineArgs.positional ()
 val filename =
-  List.hd (CommandLineArgs.positional ())
-  handle _ => Util.die "Usage: ./test @mpl procs <P> -- <SNAP_FILENAME>"
+  List.nth (args, 1)
+  handle _ => Util.die "Usage: ./main @mpl procs <P> -- <ALGO=gn|louvain> <SNAP_FILENAME>"
+val algo =
+  List.nth (args, 0)
+  handle _ => Util.die "Usage: ./main @mpl procs <P> -- <ALGO=gn|louvain> <SNAP_FILENAME>"
+val _ =
+  if algo <> "louvain" andalso algo <> "gn"
+  then Util.die "Algorithm must be 'louvain' or 'gn'"
+  else ()
 
 structure Louvain = Louvain
 structure GN = NewmanGirvan
@@ -16,8 +23,11 @@ val (ug, tm2) = Util.getTime (fn _ => UndirectedGraph.load_from_directed_graph g
 val _ = print ("Loaded undirected graph in " ^ Time.fmt 4 tm2 ^ "s\n")
 val _ = print ("V:" ^ (Int.toString (UndirectedGraph.num_vertices ug)) ^ " E:" ^ (Int.toString (UndirectedGraph.num_edges ug)) ^ "\n")
 
-(* val res = Louvain.louvain (ug) *)
 val _ = print "--------------------\n"
-val comm = Benchmark.run (fn _ => GN.newman_girvan ug)
+val comm = 
+  if algo = "louvain" then
+    Benchmark.run (fn _ => Louvain.louvain ug)
+  else 
+    Benchmark.run (fn _ => GN.newman_girvan ug)
 val _ = print "--------------------\n"
 val _ = Myprint.f_print_int_array (comm, "comm.txt")
