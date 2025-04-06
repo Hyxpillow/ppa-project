@@ -1,4 +1,4 @@
-structure Brandes: 
+structure Brandes: (* For NewmanGirvan*)
 sig
   val get_max_betweenness: UndirectedGraph.t -> int * int
 end =

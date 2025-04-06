@@ -21,15 +21,14 @@ def load_communities_from_file(filepath):
         communities = eval(line)
     return communities
 
-if len(sys.argv) != 3:
-    print("Usage: python3 draw.py <GRAPH_FILE> <COMMUNITIES_FILE>")
+if len(sys.argv) != 2:
+    print("Usage: python3 plot.py <GRAPH_FILE>")
     sys.exit(1)
 
 graph_file = sys.argv[1]
-communities_file = sys.argv[2]
 
-graph = load_from_file(graph_file)
-communities = load_communities_from_file(communities_file)
+graph = load_from_file("test-graph/" + graph_file)
+communities = load_communities_from_file("test-graph-output/" + graph_file)
 
 G = nx.Graph()
 for node, neighbors in graph.items():
