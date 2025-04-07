@@ -58,7 +58,6 @@ struct
               val degree = UGraph.degree (g, v)
               val _ = Array.update (comm, v, comm_new)
               val _ = Array.update (comm_history, v, comm_old)
-              (* val _ = print ((Int.toString v) ^ " Move from " ^ (Int.toString comm_old) ^ " to " ^ (Int.toString comm_new) ^ "\n") *)
               
               fun atomic_update_comm (comm, add_or_sub, delta_degree) = 
                 let

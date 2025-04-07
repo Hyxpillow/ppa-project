@@ -9,15 +9,20 @@ sig
   val neighbors: graph * vertex -> vertex Seq.t
   val num_vertices: graph -> int
   val num_edges: graph -> int
+ 
+  (* for louvain algorithm*)
+  (* val aggregate_nodes: graph * int Seq.t -> graph *)
 
-  (* for newman-girvan algo *)
+  (* for newman-girvan algorithm *)
   val remove_edge: graph * vertex * vertex -> graph
 
   val load_from_directed_graph: Graph.graph -> graph
 end =
 struct
   datatype graph =
-    G of {n: int Seq.t, off: int Seq.t}
+    G of {
+      n: int Seq.t, off: int Seq.t
+    }
   type t = graph 
   type vertex = Graph.vertex
   
@@ -48,6 +53,8 @@ struct
       val degrees = Seq.map Seq.length undirected_edges
       val (offsets, _) = Seq.scan op+ 0 degrees
       val neighbors = Seq.flatten undirected_edges
+      (* val weights = Seq.tabulate (fn (i) => 1.0) (Seq.length offsets) *)
+      (* val node_members = Seq.tabulate (fn (i) => Seq.singleton i) (Seq.length neighbors) *)
     in
       G {
         n = neighbors,
@@ -70,10 +77,10 @@ struct
       hi - lo
     end
 
-  fun neighbors (g as G {n, off, ...}, v:vertex) =
+  fun neighbors (g as G {n, off}, v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
-  
-  (* W:O(n)*)
+
+  (* W:O(n) for newman_girvan algorithm *)
   fun remove_edge (g as G {n, off}, u:vertex, v:vertex) : graph =
     let
       val u_lo = Seq.nth off u
@@ -92,7 +99,6 @@ struct
         )
       val off' = Parallel.scan op+ 0 (0, (Seq.length off) - 1) 
         (fn (i) => if u <> i andalso v <> i then degree (g, i) else degree (g, i) - 1)
-      (* val _ = Myprint.print_int_seq n' *)
       (* val _ = Myprint.print_int_seq off' *)
     in
       G {n = n', off = off'}

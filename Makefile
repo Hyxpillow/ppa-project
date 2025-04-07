@@ -1,14 +1,11 @@
-test: *.sml *.mlb lib-local/*.sml lib-local/*.mlb
-	mpl -default-type int64 -default-type word64 test.mlb
+NETID = yh5047
+PROJECT_DIR = ~/ppa/ppa-project
 
-push:
-	git add .
-	git commit -m "."
-	git push --force
+main: *.sml *.mlb lib-local/*.sml lib-local/*.mlb
+	mpl -default-type int64 -default-type word64 main.mlb
 
 send:
-	scp meGraph.txt yh5047@access.cims.nyu.edu:~/ppa/ppa-project/
+	scp test-graph/* $(NETID)@access.cims.nyu.edu:$(PROJECT_DIR)/test-graph/
 
 recv:
-	scp yh5047@access.cims.nyu.edu:~/ppa/ppa-project/comm.txt .
-
+	scp $(NETID)@access.cims.nyu.edu:$(PROJECT_DIR)/test-graph-output/* ./test-graph-output/
