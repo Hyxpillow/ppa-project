@@ -82,8 +82,6 @@ struct
 
   fun neighbors (g as G {n, off, ...}, v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
-  
-  fun aggregate_nodes (g as G)
 
   (* W:O(n) for newman_girvan algorithm *)
   fun remove_edge (g as G {n, off, w, super_node}, u:vertex, v:vertex) : graph =
