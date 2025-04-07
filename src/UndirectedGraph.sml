@@ -58,7 +58,7 @@ struct
     in
       G {
         n = neighbors,
-        off = offsets,
+        off = offsets
       }
     end
 

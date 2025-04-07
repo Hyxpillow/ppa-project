@@ -41,4 +41,4 @@ louvain.sml - 实现了 Louvain 算法的 phase1 并行部分
 newman_girvan.sml - 实现了 Girvan–Newman 算法，会调用 brandes.sml 计算最大边介数
 brandes.sml - 实现边介数计算（Brandes 算法）
 
-请在 Makefile 中自行定义修改 NETID 和 PROJECT_DIR 。
+在 Makefile 中自行定义修改 NETID 和 PROJECT_DIR 。
