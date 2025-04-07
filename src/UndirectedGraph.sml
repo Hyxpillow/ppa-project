@@ -54,14 +54,12 @@ struct
       val degrees = Seq.map Seq.length undirected_edges
       val (offsets, _) = Seq.scan op+ 0 degrees
       val neighbors = Seq.flatten undirected_edges
-      val weights = Seq.tabulate (fn (i) => 1.0) (Seq.length offsets)
-      val node_members = Seq.tabulate (fn (i) => Seq.singleton i) (Seq.length neighbors)
+      (* val weights = Seq.tabulate (fn (i) => 1.0) (Seq.length offsets) *)
+      (* val node_members = Seq.tabulate (fn (i) => Seq.singleton i) (Seq.length neighbors) *)
     in
       G {
         n = neighbors,
         off = offsets,
-        w = weights,
-        super_node = node_members
       }
     end
 
@@ -71,7 +69,7 @@ struct
   fun num_vertices (G {off, ...}) =
     Seq.length off
 
-  fun degree (g as G {n, off, ...}, v:vertex) =
+  fun degree (g as G {n, off}, v:vertex) =
     let
       val lo = Seq.nth off v
       val hi =
@@ -80,7 +78,7 @@ struct
       hi - lo
     end
 
-  fun neighbors (g as G {n, off, ...}, v:vertex) =
+  fun neighbors (g as G {n, off} v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
 
   (* W:O(n) for newman_girvan algorithm *)
@@ -104,7 +102,6 @@ struct
         (fn (i) => if u <> i andalso v <> i then degree (g, i) else degree (g, i) - 1)
       (* val _ = Myprint.print_int_seq off' *)
     in
-      G {n = n', off = off', w = w, super_node = sn}
+      G {n = n', off = off'}
     end
-    (* 假设已经打开 Seq 模块或已绑定必要函数，如 Seq.map, Seq.filter 等 *)
 end
