@@ -86,7 +86,7 @@ struct
   fun aggregate_nodes (g as G)
 
   (* W:O(n) for newman_girvan algorithm *)
-  fun remove_edge (g as G {n, off, w, sn}, u:vertex, v:vertex) : graph =
+  fun remove_edge (g as G {n, off, w, super_node}, u:vertex, v:vertex) : graph =
     let
       val u_lo = Seq.nth off u
       val u_hi = u_lo + (degree (g, u))
