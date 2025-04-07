@@ -11,7 +11,7 @@ sig
   val num_edges: graph -> int
  
   (* for louvain algorithm*)
-  val aggregate_nodes: graph * int Seq.t -> graph
+  (* val aggregate_nodes: graph * int Seq.t -> graph *)
 
   (* for newman-girvan algorithm *)
   val remove_edge: graph * vertex * vertex -> graph
