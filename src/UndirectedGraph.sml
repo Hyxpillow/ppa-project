@@ -77,7 +77,7 @@ struct
       hi - lo
     end
 
-  fun neighbors (g as G {n, off} v:vertex) =
+  fun neighbors (g as G {n, off}, v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
 
   (* W:O(n) for newman_girvan algorithm *)
