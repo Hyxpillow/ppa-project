@@ -97,8 +97,7 @@ struct
           then round 
           else update_comm_until_stable (round + 1)
     
-      val _ = update_comm_until_stable 0
-      val g' = UGraph.aggregate_nodes (g, comm)
+      val round = update_comm_until_stable 0
     in
       comm
     end

@@ -1,0 +1,44 @@
+使用方法：
+
+./main @mpl procs <P> -- <ALGO=[gn|louvain]> <SNAP_FILENAME>
+
+参数说明：
+<P>：使用的处理器数量
+<ALGO>：选择的算法（gn = Girvan–Newman，louvain = Louvain）
+<SNAP_FILENAME>：输入图文件名，如 g1.txt、g2.txt（不需要带路径）
+
+程序会自动从 test-graph/ 文件夹中读取图文件，并将社区检测结果输出到 test-graph-output/ 文件夹中。
+
+编译方法：
+make
+
+文件传输命令：
+发送输入图到服务器： make send
+从服务器接收输出结果（运行 plot.py 前必须执行）： make recv
+
+结果可视化：
+使用 plot.py 脚本并传入图文件名（如 g1.txt）：
+python3 plot.py g1.txt
+
+plot.py 会自动从 test-graph/ 和 test-graph-output/ 中加载图和对应社区划分结果进行可视化。
+
+项目目录结构：
+Makefile - 编译和传输脚本
+README.md - 项目说明文件
+lib/ - 教授提供的库，未修改
+lib-local/ - 教授提供的本地库，未修改
+main.mlb - 项目构建文件
+main.sml - 程序入口
+plot.py - 可视化脚本
+src/ - 本项目代码所在文件夹
+test-graph/ - 输入图文件夹
+test-graph-output/ - 输出结果文件夹
+
+src 文件夹说明：
+Myprint.sml - 用于打印调试信息
+UndirectedGraph.sml - 在 DirectedGraph 基础上实现的无向图，加入了 remove edge 等 gn 算法需要的功能
+louvain.sml - 实现了 Louvain 算法的 phase1 并行部分
+newman_girvan.sml - 实现了 Girvan–Newman 算法，会调用 brandes.sml 计算最大边介数
+brandes.sml - 实现边介数计算（Brandes 算法）
+
+请在 Makefile 中自行定义修改 NETID 和 PROJECT_DIR 。
