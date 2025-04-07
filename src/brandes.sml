@@ -61,40 +61,41 @@ struct
 
             val _ = bfs ()
 
-            fun backprop [] = ()
-            | backprop (w::ws) =
-              let
-                val sigma_w = Real.fromInt (Array.sub(sigma, w))
-                val delta_w = Array.sub(delta, w)
-                val ps = !(Array.sub(pred, w))
+          fun backprop [] = ()
+          | backprop (w::ws) =
+            let
+              val sigma_w = Real.fromInt (Array.sub(sigma, w))
+              val delta_w = Array.sub(delta, w)
+              val ps = !(Array.sub(pred, w))
 
-                fun update_preds [] = ()
-                | update_preds (v::vs) =
-                  let
-                    val sigma_v = Real.fromInt (Array.sub(sigma, v))
-                    val contrib = (sigma_v / sigma_w) * (1.0 + delta_w)
-                    val _ = Array.update(delta, v, Array.sub(delta, v) + contrib)
-                    val (u', v') = if v < w then (v, w) else (w, v)
-                    val old_val = Array.sub(Array.sub(edge_centrality, u'), v')
-                    val _ = Array.update(Array.sub(edge_centrality, u'), v', old_val + contrib)
-                  in
-                    update_preds vs
-                  end
+              fun update_preds [] = ()
+              | update_preds (v::vs) =
+                let
+                  val sigma_v = Real.fromInt (Array.sub(sigma, v))
+                  val contrib = (sigma_v / sigma_w) * (1.0 + delta_w)
+                  val _ = Array.update(delta, v, Array.sub(delta, v) + contrib)
+                  val (u', v') = if v < w then (v, w) else (w, v)
+                  val old_val = Array.sub(Array.sub(edge_centrality, u'), v')
+                  val _ = Array.update(Array.sub(edge_centrality, u'), v', old_val + contrib)
                 in
-                  update_preds ps;
-                  backprop ws
+                  update_preds vs
                 end
+            in
+                update_preds ps;
+                backprop ws
+            end
         in
-            backprop (!stack)
+          backprop (!stack)
         end
+      
+      (* iterate over vertices and accumulate centrality *)
+      val _  = Parallel.parfor (0, n) process_source
 
-      val _ = List.app process_source (List.tabulate(n, fn i => i))
-
+      (* find the edge with the maximum centrality *)
       fun g ((u1, v1, c1), (u2, v2, c2)) = if c1 > c2 then (u1, v1, c1) else (u2, v2, c2)
       val z = (0, 0, 0.0)
       fun f (u) = Parallel.reduce g z (u + 1, n) 
         (fn (v) => (u, v, Array.sub(Array.sub(edge_centrality, u), v)))
-        
       val (best_u, best_v, best_c) = Parallel.reduce g z (0, n) f
     in
       (best_u, best_v)
