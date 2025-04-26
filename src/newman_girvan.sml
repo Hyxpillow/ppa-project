@@ -9,6 +9,7 @@ struct
 
   fun newman_girvan (g:UndirectedGraph.t) : int array = 
     let
+      (* W:O(n + m) S:O(n + m) because of DFS *)
       fun get_comm (g': UGraph.t) : int array * int =
         let
           val comm = Array.array ((UGraph.num_vertices g'), ~1)
@@ -43,15 +44,19 @@ struct
         end
       
       (* find all the components and calculate the total Q *)
+      (* W:O(nm * comm_count) S:O(log(n) * log(m) * log(comm_count)) *)
       fun get_Q (g', comm, comm_count) : real = 
         let
+          (* W:O(nm) S:O(log(n) * log(m)) *)
           fun get_comm_Q (comm_i) : real = 
             let
               val m' = Real.fromInt (UGraph.num_edges g)
+              (* W:O(n) S:O(log n) *)
               val dc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g')
                 (fn (v) => if Array.sub(comm, v) <> comm_i then 0 
                   else UGraph.degree (g', v)
                 )
+              (* W:O(nm) S:O(log(n) * log(m)) *)
               val lc = Parallel.reduce op+ 0 (0, UGraph.num_vertices g')
                 (fn (v) => if Array.sub(comm, v) <> comm_i then 0 
                   else 
@@ -68,6 +73,8 @@ struct
             in
               (lc_real / m') - (dc_real * dc_real / 4.0 / m' / m')
             end
+          
+          (* W:O(nm * comm_count) S:O(log(n) * log(m) * log(comm_count)) *)
           val res = Parallel.reduce op+ 0.0 (0, comm_count) 
             (fn (comm_i) => get_comm_Q(comm_i))
         in
@@ -78,13 +85,17 @@ struct
       val best_g = ref g
       val best_comm_count = ref (UGraph.num_vertices g)
 
+      (* W:O(mn^2 + nm^2)) S:O(mn + m^2)*)
       fun loop_until_no_edge (g) = 
         if (UGraph.num_edges g) = 0 then ()
         else 
           let
+            (* W:O(n^2 + nm)) S:O(n + m)*)
             val (u, v) = Brandes.get_max_betweenness (g)
+            (* W:O(n + m) S:O(logm) *)
             val g' = UGraph.remove_edge (g, u, v)
 
+            (* W:O(n + m) S:O(n + m) because of DFS *)
             val (comm, comm_count) = get_comm (g')
             val cur_Q = if comm_count <> !best_comm_count 
               then get_Q (g', comm, comm_count)

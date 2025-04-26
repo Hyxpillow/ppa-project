@@ -1,16 +1,20 @@
 structure Brandes: (* For NewmanGirvan*)
 sig
+  (* W:O(n^2 + nm)) S:O(n + m)*)
   val get_max_betweenness: UndirectedGraph.t -> int * int
 end =
 struct
   structure UGraph = UndirectedGraph
+  (* W:O(n^2 + nm)) S:O(n + m)*)
   fun get_max_betweenness (g: UGraph.t) : int * int =
     let
       val n = UGraph.num_vertices g
 
       (* edge_centrality[u][v] represents the centrality of edge (u,v) *)
+      (* W:O(n^2) S:O(n^2)*)
       val edge_centrality = Array.tabulate(n, fn _ => Array.array(n, 0.0))
-
+      
+      (* W:O(n + m) S:O(n + m)*)
       fun process_source s =
         let
           val sigma = Array.array(n, 0)
@@ -24,6 +28,7 @@ struct
             Array.update(sigma, s, 1);
             Array.update(dist, s, 0)
           )
+          (* W:O(n + m) S:O(n + m)*)
           fun bfs () =
             case !queue of
               [] => ()
@@ -61,6 +66,7 @@ struct
 
             val _ = bfs ()
 
+          (* W:O(n + m) S:O(n + m)*)
           fun backprop [] = ()
           | backprop (w::ws) =
             let
@@ -88,14 +94,18 @@ struct
           backprop (!stack)
         end
       
+      
       (* iterate over vertices and accumulate centrality *)
+      (* W:O(n^2 + nm)) S:O(n + m)*)
       val _  = Parallel.parfor (0, n) process_source
 
       (* find the edge with the maximum centrality *)
       fun g ((u1, v1, c1), (u2, v2, c2)) = if c1 > c2 then (u1, v1, c1) else (u2, v2, c2)
       val z = (0, 0, 0.0)
+      (* W:O(n)) S:O(log(n))*)
       fun f (u) = Parallel.reduce g z (u + 1, n) 
         (fn (v) => (u, v, Array.sub(Array.sub(edge_centrality, u), v)))
+      (* W:O(n^2)) S:O(log^2(n))*)
       val (best_u, best_v, best_c) = Parallel.reduce g z (0, n) f
     in
       (best_u, best_v)
