@@ -1,5 +1,6 @@
 structure Louvain: 
 sig
+  (* W:O(n_vertices * n_edges) S:O(log(n_vertices) + max(log d)) *)
   val louvain: UndirectedGraph.t -> int array
 end =
 
@@ -49,9 +50,11 @@ struct
           Parallel.reduce g z (0, degree) f
         end
     
+      (* W:O(n_vertices * n_edges) S:O(log n + max(log d)) *)
       fun update_comm_in_parallel () = 
         let
           val stable = ref true
+          (* W:O(1) S:O(1) *)
           fun update_comm (v, comm_old, comm_new) = 
             let
               (* Concurrent Safe *)
@@ -59,6 +62,7 @@ struct
               val _ = Array.update (comm, v, comm_new)
               val _ = Array.update (comm_history, v, comm_old)
               
+              (* W:O(1) S:O(1) *)
               fun atomic_update_comm (comm, add_or_sub, delta_degree) = 
                 let
                   val old_weight = Array.sub (comm_weights, comm)
@@ -75,7 +79,9 @@ struct
             in
               ()
             end
+          (* W:O(n_vertices * n_edges) S:O(log n + max(log d)) *)
           val expected_comm_seq = Parallel.tabulate (0, (UGraph.num_vertices g)) (fn (v) => calculate_max_deltaQ v)
+          (* W:O(n) S:O(1) *)
           val _ = Parallel.parfor (0, (UGraph.num_vertices g)) (
             fn (v) => 
               let

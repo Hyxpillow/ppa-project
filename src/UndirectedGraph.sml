@@ -80,7 +80,7 @@ struct
   fun neighbors (g as G {n, off}, v:vertex) =
     Seq.subseq n (Seq.nth off v, degree (g, v))
 
-  (* W:O(n) for newman_girvan algorithm *)
+  (* W:O(n + m) S:O(logm) for newman_girvan algorithm *)
   fun remove_edge (g as G {n, off}, u:vertex, v:vertex) : graph =
     let
       val u_lo = Seq.nth off u
@@ -99,7 +99,6 @@ struct
         )
       val off' = Parallel.scan op+ 0 (0, (Seq.length off) - 1) 
         (fn (i) => if u <> i andalso v <> i then degree (g, i) else degree (g, i) - 1)
-      (* val _ = Myprint.print_int_seq off' *)
     in
       G {n = n', off = off'}
     end
