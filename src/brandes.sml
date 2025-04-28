@@ -11,7 +11,6 @@ struct
       val n = UGraph.num_vertices g
 
       (* edge_centrality[u][v] represents the centrality of edge (u,v) *)
-      (* W:O(n^2) S:O(n^2)*)
       val edge_centrality = Array.tabulate(n, fn _ => Array.array(n, 0.0))
       
       (* W:O(n + m) S:O(n + m)*)
